@@ -183,7 +183,8 @@ end of `docs/figures/RESULTS_TABLES.md`, generated from that file.
 |---|---|---|
 | P0 (top-5 blacklist) | 99.9% | 24.0% |
 | P4 | 99.8% | 14.4% |
-| P4+L3 | 99.8% | 10.9% |
+| P4+L3, complete windows | 99.8% | 10.9% |
+| P4+L3, block-time check | 99.8% | 0.0% (live: 0.4% during attacks) |
 
 - Nearly all of P4's loss comes from blocking benign sources during their heavy
   bursts (downloads; one external server, 8.250.89.254, accounts for the largest
@@ -240,8 +241,7 @@ numbers are not a held-out result.** No threshold changed and no model was retra
 gave no result, because the tool cannot hold TCP connections with forged addresses. An attacker who deliberately
 imitates normal flows has not been tested; the veto would spare it.
 
-**Not checked yet.** The training-day check that the classifier, trained on complete windows, also judges partial
-flows well needs the per-second flow table of 01-12, and the offline figure for the whole test day (P4+L3 10.9%,
-window evidence only) needs that table for 03-11. Both come from `scripts/cic_extract.py`, which needs the
-downloaded zips; the drive was disconnected on 31 Oct. Until then the table exists only for the replay windows
-(`scripts/cic_replay_fsec.py`), and `scripts/cic_experiment.py --stages level2` stops with a message asking for it.
+**Partial flows.** The classifier was trained on complete windows but now also judges flows mid-window. Checked
+on the training day only (`level3.partial_flows_train_day`), on 10-minute blocks not used for fitting, with a rule
+fixed in advance (at least 95% of attack flows found and at most 1% of benign flows flagged, up to 3 s): 1 s into a
+window it finds 99.77% and flags 0.17%, so the model was not changed.

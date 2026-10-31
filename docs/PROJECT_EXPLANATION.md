@@ -1,4 +1,4 @@
-# Rapid-Corona: Complete Project Explanation
+# ebpf-ddos-mitigation: Complete Project Explanation
 
 A hybrid **eBPF/XDP + Machine Learning DDoS detection and mitigation system**.
 This document describes the project as it is implemented in this repository
@@ -29,7 +29,7 @@ project aims to:
 ## 2. Repository layout
 
 ```
-rapid-corona/
+ebpf-ddos-mitigation/
 ├── capstone/   Capstone course documents (proposal, rubrics, thesis format,
 │               circular). Not part of the software; never modified.
 ├── project/    The runnable software (everything below)

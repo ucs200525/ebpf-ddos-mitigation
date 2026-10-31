@@ -440,7 +440,7 @@
     1541255838
    ]
   ],
-  "seconds": 144.6,
+  "seconds": 155.3,
   "provenance": {
    "script": "scripts/cic_experiment.py",
    "parameters": {
@@ -476,10 +476,10 @@
      ]
     }
    },
-   "created": "2026-10-29 23:38:09 +0530",
-   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "created": "2026-10-31 16:33:27 +0530",
+   "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
    "git_dirty": true,
-   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
    "python": "3.10.6",
    "numpy": "2.2.6",
    "scikit_learn": "1.7.2",
@@ -488,11 +488,11 @@
    "inputs": {
     "cic_01-12": {
      "path": "data\\external\\cic\\01-12.npz",
-     "sha256": "c15eb01ad291b83ab316b26abc68e42d97d68340812a95e82fceaf0c87f1bb8a"
+     "sha256": "79dffd543be3efffd7924648bd866f155edc1d8fe4d7c93d116c63f020c2b748"
     },
     "cic_03-11": {
      "path": "data\\external\\cic\\03-11.npz",
-     "sha256": "094cdab6a8f568876713667a904443d342315f2f6d8b835751563ab725986296"
+     "sha256": "e6b085ce68d26820c7d2dc25d0e69ab61d42f4b9320357bbfa4a7580682da0fe"
     },
     "cic_inventory": {
      "path": "data\\results\\cic_inventory.json",
@@ -504,11 +504,11 @@
     },
     "cic_window_model": {
      "path": "data\\models\\cic_window_model.joblib",
-     "sha256": "a7d7b30b5a30d8f7758788e33c1f53ba7ac19a8fcfbdbc84782a00d75c22d499"
+     "sha256": "af1a6d1a41fa67ba59b3ec411d4bae4b2f144cca83f66e05bf1122fdbc9fa4e6"
     },
     "cic_only_window_model": {
      "path": "data\\models\\cic_only_window_model.joblib",
-     "sha256": "2d816175c0a579278af2e17edf6fe5ba3b8d2ab77f7ca88ea235d47794bfe306"
+     "sha256": "dd61343015db840ea34bf52f738c43d2a7d64a192d0d033108391debab11c794"
     }
    }
   }
@@ -528,7 +528,8 @@
     "t_min": 1543670231.18381,
     "t_max": 1543698999.140675,
     "persec_rows": 56510,
-    "flow_rows": 1442916
+    "flow_rows": 1442916,
+    "flow_second_rows": 2102218
    },
    "03-11": {
     "n_ipv4": 61374225,
@@ -537,7 +538,8 @@
     "t_min": 1541247498.651518,
     "t_max": 1541277416.349321,
     "persec_rows": 54224,
-    "flow_rows": 729163
+    "flow_rows": 729163,
+    "flow_second_rows": 754806
    }
   }
  },
@@ -804,6 +806,38 @@
     "psh_ratio": 0.0
    }
   ],
+  "partial_flows_train_day": {
+   "1s": {
+    "recall": 0.9976889740119509,
+    "false_positive_rate": 0.0016943930991990142,
+    "attack_flows": 204671,
+    "benign_flows": 6492
+   },
+   "2s": {
+    "recall": 0.997958024691358,
+    "false_positive_rate": 0.0015626356454553347,
+    "attack_flows": 405000,
+    "benign_flows": 11519
+   },
+   "3s": {
+    "recall": 0.9979755577148135,
+    "false_positive_rate": 0.0015463304389199478,
+    "attack_flows": 604117,
+    "benign_flows": 16814
+   },
+   "5s": {
+    "recall": 0.9976397565069847,
+    "false_positive_rate": 0.002127447395539009,
+    "attack_flows": 827457,
+    "benign_flows": 30083
+   },
+   "10s": {
+    "recall": 0.997072988952754,
+    "false_positive_rate": 0.0025932986415236918,
+    "attack_flows": 1384689,
+    "benign_flows": 58227
+   }
+  },
   "rules": {
    "syn_only_tcp_flow": {
     "test_flows": {
@@ -890,7 +924,7 @@
     }
    }
   },
-  "seconds": 39.5,
+  "seconds": 78.4,
   "provenance": {
    "script": "scripts/cic_experiment.py",
    "parameters": {
@@ -926,10 +960,10 @@
      ]
     }
    },
-   "created": "2026-10-29 23:38:49 +0530",
-   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "created": "2026-10-31 16:34:46 +0530",
+   "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
    "git_dirty": true,
-   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
    "python": "3.10.6",
    "numpy": "2.2.6",
    "scikit_learn": "1.7.2",
@@ -938,11 +972,11 @@
    "inputs": {
     "cic_01-12": {
      "path": "data\\external\\cic\\01-12.npz",
-     "sha256": "c15eb01ad291b83ab316b26abc68e42d97d68340812a95e82fceaf0c87f1bb8a"
+     "sha256": "79dffd543be3efffd7924648bd866f155edc1d8fe4d7c93d116c63f020c2b748"
     },
     "cic_03-11": {
      "path": "data\\external\\cic\\03-11.npz",
-     "sha256": "094cdab6a8f568876713667a904443d342315f2f6d8b835751563ab725986296"
+     "sha256": "e6b085ce68d26820c7d2dc25d0e69ab61d42f4b9320357bbfa4a7580682da0fe"
     },
     "cic_inventory": {
      "path": "data\\results\\cic_inventory.json",
@@ -950,7 +984,7 @@
     },
     "cic_flow_model": {
      "path": "data\\models\\cic_flow_model.joblib",
-     "sha256": "273916a42ef85eacffbf6e8a00d64fde98a327f2cc1532f2a866b5a3fe4b7dae"
+     "sha256": "7c25ff7bda06e3f7fc99ad9a0e3b40a56332d7192b05692ad3f470cdd620792d"
     }
    }
   }
@@ -3232,6 +3266,137 @@
       "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: allow)",
       "all": {
        "attack_drop_pct": 99.81211520723451,
+       "legit_loss_pct": 0.0,
+       "attack_passed_pct": 0.18788479276548742,
+       "legit_retained_pct": 100.0,
+       "legit_loss_attack_runs_pct": 0.0,
+       "legit_loss_benign_runs_pct": 0.0,
+       "legit_sources_hit_pct": 0.0,
+       "mitigated_runs_pct": 55.55555555555556,
+       "median_time_to_mitigate_s": 1.0,
+       "detected_runs_pct": 77.77777777777777,
+       "median_detection_delay_s": 0.0,
+       "legit_loss_post_attack_pct": 0.0,
+       "median_recovery_s": 0.5,
+       "recovered_runs_pct": 88.88888888888889,
+       "n_runs": 90,
+       "n_attack_runs": 9
+      },
+      "per_scenario": {
+       "LDAP": {
+        "attack_drop_pct": 99.85713027577235,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.14286972422765132,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "MSSQL": {
+        "attack_drop_pct": 99.80112375885648,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.1988762411435232,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "NetBIOS": {
+        "attack_drop_pct": 99.96587654653524,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.03412345346475831,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "Syn": {
+        "attack_drop_pct": 99.94880413084239,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.051195869157609764,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 1.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "UDP": {
+        "attack_drop_pct": 99.98282582830286,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.01717417169713542,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "no attack": {
+        "attack_drop_pct": 0.09529860228716645,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 99.90470139771283,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 0.0,
+        "median_time_to_mitigate_s": null,
+        "detected_runs_pct": 50.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 75.0,
+        "n_runs": 85,
+        "n_attack_runs": 4
+       }
+      }
+     },
+     "P4+L3-window": {
+      "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: allow)",
+      "all": {
+       "attack_drop_pct": 99.81211520723451,
        "legit_loss_pct": 10.930131909027217,
        "attack_passed_pct": 0.18788479276548742,
        "legit_retained_pct": 89.06986809097279,
@@ -3364,13 +3529,13 @@
     "p4_l3_choice_on_train_day": {
      "limit": {
       "attack_drop_pct": 99.90587943407243,
-      "legit_loss_pct": 4.031426646562509,
-      "objective": 91.84302614094742
+      "legit_loss_pct": 3.3689326617689495,
+      "objective": 93.16801411053453
      },
      "allow": {
       "attack_drop_pct": 99.90587943407243,
-      "legit_loss_pct": 2.493096147059767,
-      "objective": 94.9196871399529
+      "legit_loss_pct": 0.0,
+      "objective": 99.90587943407243
      }
     }
    },
@@ -4561,6 +4726,137 @@
       }
      },
      "P4+L3": {
+      "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: limit)",
+      "all": {
+       "attack_drop_pct": 99.80402721287949,
+       "legit_loss_pct": 0.12780711600611705,
+       "attack_passed_pct": 0.19597278712051036,
+       "legit_retained_pct": 99.87219288399389,
+       "legit_loss_attack_runs_pct": 0.0,
+       "legit_loss_benign_runs_pct": 0.16090994667317934,
+       "legit_sources_hit_pct": 0.019825535289452814,
+       "mitigated_runs_pct": 55.55555555555556,
+       "median_time_to_mitigate_s": 1.0,
+       "detected_runs_pct": 77.77777777777777,
+       "median_detection_delay_s": 0.0,
+       "legit_loss_post_attack_pct": 0.0,
+       "median_recovery_s": 0.5,
+       "recovered_runs_pct": 88.88888888888889,
+       "n_runs": 90,
+       "n_attack_runs": 9
+      },
+      "per_scenario": {
+       "LDAP": {
+        "attack_drop_pct": 99.85708446584074,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.14291553415925762,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "MSSQL": {
+        "attack_drop_pct": 99.79948140007734,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.20051859992265975,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "NetBIOS": {
+        "attack_drop_pct": 99.9658246477467,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.03417535225329971,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "Syn": {
+        "attack_drop_pct": 99.948835875297,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.05116412470300702,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 1.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "UDP": {
+        "attack_drop_pct": 99.95186277836814,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.04813722163186185,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 2.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "no attack": {
+        "attack_drop_pct": 0.45884512212339407,
+        "legit_loss_pct": 0.1532202165249884,
+        "attack_passed_pct": 99.54115487787661,
+        "legit_retained_pct": 99.84677978347501,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.16090994667317934,
+        "legit_sources_hit_pct": 0.022722108611679163,
+        "mitigated_runs_pct": 0.0,
+        "median_time_to_mitigate_s": null,
+        "detected_runs_pct": 50.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 75.0,
+        "n_runs": 85,
+        "n_attack_runs": 4
+       }
+      }
+     },
+     "P4+L3-window": {
       "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: limit)",
       "all": {
        "attack_drop_pct": 99.80402721287949,
@@ -5896,6 +6192,137 @@
       "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: allow)",
       "all": {
        "attack_drop_pct": 99.81057103741773,
+       "legit_loss_pct": 0.0,
+       "attack_passed_pct": 0.18942896258226938,
+       "legit_retained_pct": 100.0,
+       "legit_loss_attack_runs_pct": 0.0,
+       "legit_loss_benign_runs_pct": 0.0,
+       "legit_sources_hit_pct": 0.0,
+       "mitigated_runs_pct": 55.55555555555556,
+       "median_time_to_mitigate_s": 1.0,
+       "detected_runs_pct": 77.77777777777777,
+       "median_detection_delay_s": 0.0,
+       "legit_loss_post_attack_pct": 0.0,
+       "median_recovery_s": 0.5,
+       "recovered_runs_pct": 88.88888888888889,
+       "n_runs": 90,
+       "n_attack_runs": 9
+      },
+      "per_scenario": {
+       "LDAP": {
+        "attack_drop_pct": 99.85713027577235,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.14286972422765132,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "MSSQL": {
+        "attack_drop_pct": 99.80112375885648,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.1988762411435232,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "NetBIOS": {
+        "attack_drop_pct": 99.96587654653524,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.03412345346475831,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "Syn": {
+        "attack_drop_pct": 99.94880413084239,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.051195869157609764,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 1.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "UDP": {
+        "attack_drop_pct": 99.97692220678198,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 0.023077793218021725,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 100.0,
+        "median_time_to_mitigate_s": 1.0,
+        "detected_runs_pct": 100.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 0.0,
+        "recovered_runs_pct": 100.0,
+        "n_runs": 1,
+        "n_attack_runs": 1
+       },
+       "no attack": {
+        "attack_drop_pct": 0.09529860228716645,
+        "legit_loss_pct": 0.0,
+        "attack_passed_pct": 99.90470139771283,
+        "legit_retained_pct": 100.0,
+        "legit_loss_attack_runs_pct": 0.0,
+        "legit_loss_benign_runs_pct": 0.0,
+        "legit_sources_hit_pct": 0.0,
+        "mitigated_runs_pct": 0.0,
+        "median_time_to_mitigate_s": null,
+        "detected_runs_pct": 50.0,
+        "median_detection_delay_s": 0.0,
+        "legit_loss_post_attack_pct": 0.0,
+        "median_recovery_s": 2.0,
+        "recovered_runs_pct": 75.0,
+        "n_runs": 85,
+        "n_attack_runs": 4
+       }
+      }
+     },
+     "P4+L3-window": {
+      "name": "Source scoring verified by per-flow classification (P4+L3, legit flows: allow)",
+      "all": {
+       "attack_drop_pct": 99.81057103741773,
        "legit_loss_pct": 10.891934037953037,
        "attack_passed_pct": 0.18942896258226938,
        "legit_retained_pct": 89.10806596204696,
@@ -6028,18 +6455,18 @@
     "p4_l3_choice_on_train_day": {
      "limit": {
       "attack_drop_pct": 99.90587943407243,
-      "legit_loss_pct": 4.005505116935613,
-      "objective": 91.89486920020121
+      "legit_loss_pct": 3.3438837380898887,
+      "objective": 93.21811195789266
      },
      "allow": {
       "attack_drop_pct": 99.90587943407243,
-      "legit_loss_pct": 2.493096147059767,
-      "objective": 94.9196871399529
+      "legit_loss_pct": 0.0,
+      "objective": 99.90587943407243
      }
     }
    }
   },
-  "seconds": 254.0,
+  "seconds": 315.4,
   "provenance": {
    "script": "scripts/cic_experiment.py",
    "parameters": {
@@ -6075,10 +6502,10 @@
      ]
     }
    },
-   "created": "2026-10-29 23:43:03 +0530",
-   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "created": "2026-10-31 16:40:01 +0530",
+   "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
    "git_dirty": true,
-   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
    "python": "3.10.6",
    "numpy": "2.2.6",
    "scikit_learn": "1.7.2",
@@ -6087,11 +6514,11 @@
    "inputs": {
     "cic_01-12": {
      "path": "data\\external\\cic\\01-12.npz",
-     "sha256": "c15eb01ad291b83ab316b26abc68e42d97d68340812a95e82fceaf0c87f1bb8a"
+     "sha256": "79dffd543be3efffd7924648bd866f155edc1d8fe4d7c93d116c63f020c2b748"
     },
     "cic_03-11": {
      "path": "data\\external\\cic\\03-11.npz",
-     "sha256": "094cdab6a8f568876713667a904443d342315f2f6d8b835751563ab725986296"
+     "sha256": "e6b085ce68d26820c7d2dc25d0e69ab61d42f4b9320357bbfa4a7580682da0fe"
     },
     "cic_inventory": {
      "path": "data\\results\\cic_inventory.json",
@@ -6103,11 +6530,11 @@
     },
     "cic_window_model": {
      "path": "data\\models\\cic_window_model.joblib",
-     "sha256": "a7d7b30b5a30d8f7758788e33c1f53ba7ac19a8fcfbdbc84782a00d75c22d499"
+     "sha256": "af1a6d1a41fa67ba59b3ec411d4bae4b2f144cca83f66e05bf1122fdbc9fa4e6"
     },
     "cic_flow_model": {
      "path": "data\\models\\cic_flow_model.joblib",
-     "sha256": "273916a42ef85eacffbf6e8a00d64fde98a327f2cc1532f2a866b5a3fe4b7dae"
+     "sha256": "7c25ff7bda06e3f7fc99ad9a0e3b40a56332d7192b05692ad3f470cdd620792d"
     }
    }
   }
@@ -6188,10 +6615,10 @@
      ]
     }
    },
-   "created": "2026-10-29 23:35:45 +0530",
-   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "created": "2026-10-31 16:30:51 +0530",
+   "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
    "git_dirty": true,
-   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
    "python": "3.10.6",
    "numpy": "2.2.6",
    "scikit_learn": "1.7.2",
@@ -6200,11 +6627,11 @@
    "inputs": {
     "cic_01-12": {
      "path": "data\\external\\cic\\01-12.npz",
-     "sha256": "c15eb01ad291b83ab316b26abc68e42d97d68340812a95e82fceaf0c87f1bb8a"
+     "sha256": "79dffd543be3efffd7924648bd866f155edc1d8fe4d7c93d116c63f020c2b748"
     },
     "cic_03-11": {
      "path": "data\\external\\cic\\03-11.npz",
-     "sha256": "094cdab6a8f568876713667a904443d342315f2f6d8b835751563ab725986296"
+     "sha256": "e6b085ce68d26820c7d2dc25d0e69ab61d42f4b9320357bbfa4a7580682da0fe"
     },
     "cic_inventory": {
      "path": "data\\results\\cic_inventory.json",
@@ -6216,11 +6643,11 @@
     },
     "cic_window_model": {
      "path": "data\\models\\cic_window_model.joblib",
-     "sha256": "78fde1ec4443645a375138384f563fce070278a87d6e9e5855b378331700e065"
+     "sha256": "3c21c316a020ebe29ebfc28ec11b8e1090595beff5c14f8cafb951d3283ad89e"
     },
     "cic_flow_model": {
      "path": "data\\models\\cic_flow_model.joblib",
-     "sha256": "921a415cec76b6953b4802195fcc4f270877b776fecb31aadab18c1568eaafeb"
+     "sha256": "92f9c9638533b23a5a91cda05b2a05a064d2d702754414534995c1303271678b"
     }
    }
   }

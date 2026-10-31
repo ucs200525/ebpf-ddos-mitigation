@@ -21,10 +21,10 @@
       "seed": 3030,
       "report": "D:\\4.own\\project\\rapid-corona\\project\\data\\models\\ddos_classifier_eval.json"
     },
-    "created": "2026-10-29 23:26:48 +0530",
-    "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+    "created": "2026-10-31 16:22:28 +0530",
+    "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
     "git_dirty": true,
-    "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+    "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
     "python": "3.10.6",
     "numpy": "2.2.6",
     "scikit_learn": "1.7.2",

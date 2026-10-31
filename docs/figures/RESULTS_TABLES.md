@@ -258,9 +258,9 @@ Each configuration was timed 5 times; values are the range (min-max) over the re
 
 | Detector + policy | Intervals | Mean ms | p50 ms | p99 ms |
 |---|---|---|---|---|
-| statistical+top5 | 1,972 | 0.1-0.1 | 0.1-0.1 | 0.4-0.5 |
-| hybrid+top5 | 1,972 | 2.2-2.3 | 2.2-2.3 | 3.1-3.6 |
-| hybrid+p4 | 1,972 | 2.7-2.8 | 2.5-2.5 | 9.1-9.6 |
+| statistical+top5 | 1,972 | 0.1-0.1 | 0.1-0.1 | 0.4-0.8 |
+| hybrid+top5 | 1,972 | 2.3-2.4 | 2.3-2.4 | 3.3-3.8 |
+| hybrid+p4 | 1,972 | 2.8-2.9 | 2.5-2.6 | 9.1-9.6 |
 
 ## Real attacks: CIC-DDoS2019 (train day 01-12, test day 03-11)
 
@@ -333,7 +333,8 @@ Recall on attack-machine flows inside attack episodes: 99.9% (670,185 flows); on
 | shipped | AHIF | 99.64% | 33.85% | 35.4% |
 | shipped | SIG | 39.54% | 7.71% | 11.6% |
 | shipped | SIG-oracle | 75.69% | 0.00% | 0.0% |
-| shipped | P4+L3 | 99.81% | 10.93% | 3.0% |
+| shipped | P4+L3 | 99.81% | 0.00% | 0.0% |
+| shipped | P4+L3-window | 99.81% | 10.93% | 3.0% |
 | cic_scorer | P0 | 99.85% | 23.96% | 9.6% |
 | cic_scorer | P1 | 96.53% | 18.58% | 7.8% |
 | cic_scorer | P2 | 0.00% | 26.94% | 29.7% |
@@ -343,7 +344,8 @@ Recall on attack-machine flows inside attack episodes: 99.9% (670,185 flows); on
 | cic_scorer | AHIF | 99.63% | 33.58% | 34.9% |
 | cic_scorer | SIG | 39.31% | 7.59% | 11.4% |
 | cic_scorer | SIG-oracle | 75.46% | 0.00% | 0.0% |
-| cic_scorer | P4+L3 | 99.80% | 0.15% | 0.1% |
+| cic_scorer | P4+L3 | 99.80% | 0.13% | 0.0% |
+| cic_scorer | P4+L3-window | 99.80% | 0.15% | 0.1% |
 | cic_set | P0 | 99.85% | 23.96% | 9.6% |
 | cic_set | P1 | 96.53% | 18.58% | 7.8% |
 | cic_set | P2 | 0.00% | 26.94% | 29.7% |
@@ -353,7 +355,8 @@ Recall on attack-machine flows inside attack episodes: 99.9% (670,185 flows); on
 | cic_set | AHIF | 99.63% | 33.58% | 34.9% |
 | cic_set | SIG | 39.31% | 7.59% | 11.4% |
 | cic_set | SIG-oracle | 75.46% | 0.00% | 0.0% |
-| cic_set | P4+L3 | 99.81% | 10.89% | 3.0% |
+| cic_set | P4+L3 | 99.81% | 0.00% | 0.0% |
+| cic_set | P4+L3-window | 99.81% | 10.89% | 3.0% |
 
 Does the CIC-trained scorer transfer? P4 on synthetic traffic, shipped detector:
 

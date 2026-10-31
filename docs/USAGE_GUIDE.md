@@ -33,7 +33,7 @@ Required packages: `numpy`, `pandas`, `scipy`, `flask`, `scikit-learn`, `joblib`
 
 ```bash
 # Navigate to the project folder (all commands below run from here)
-cd rapid-corona/project
+cd ebpf-ddos-mitigation/project
 
 # Run setup (Linux)
 sudo ./scripts/setup_ebpf.sh

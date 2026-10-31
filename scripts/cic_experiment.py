@@ -741,6 +741,7 @@ def stage_level2(workers):
                             'objective': r['attack_drop_pct'] - LEGIT_WEIGHT * r['legit_loss_pct']}
         mode = max(choice, key=lambda m: choice[m]['objective'])
         pol['P4+L3'] = ('hybrid', FlowVerifiedScoring(sc, on_legit_flows=mode, **params))
+        pol['P4+L3-window'] = ('hybrid', FlowVerifiedScoring(sc, on_legit_flows=mode, block_time_check=False, **params))
         out = {}
         for key, (_, policy) in pol.items():
             out[key] = {'name': policy.name, 'all': evaluate_policy(policy, runs, 'hybrid'),

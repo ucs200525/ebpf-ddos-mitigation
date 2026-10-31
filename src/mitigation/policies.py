@@ -302,8 +302,10 @@ class FlowVerifiedScoring(SourceScoringPolicy):
     threshold; on_legit_flows is chosen on the training data.
     """
 
-    def __init__(self, scorer: SourceScorer, flow_cut: float = 0.5, on_legit_flows: str = 'limit', **kwargs):
+    def __init__(self, scorer: SourceScorer, flow_cut: float = 0.5, on_legit_flows: str = 'limit',
+                 block_time_check: bool = True, **kwargs):
         super().__init__(scorer, **kwargs)
+        self.block_time_check = block_time_check     # False: complete windows only (ablation)
         if on_legit_flows not in ('limit', 'allow'):
             raise ValueError("on_legit_flows must be 'limit' or 'allow'")
         self.flow_cut = flow_cut
@@ -314,7 +316,7 @@ class FlowVerifiedScoring(SourceScoringPolicy):
 
     def observe_flows(self, attack_share, probe=None):
         self._share = attack_share
-        self._probe = probe
+        self._probe = probe if self.block_time_check else None
 
     def _evidence(self, idx):
         if self._share is not None and len(self._share) == len(idx):

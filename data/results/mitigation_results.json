@@ -47,10 +47,10 @@
     "seeds": 5,
     "workers": 15
    },
-   "created": "2026-10-29 23:35:03 +0530",
-   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "created": "2026-10-31 16:30:10 +0530",
+   "git_commit": "9565e65308404ba9f57911d7314b490ed16ad666",
    "git_dirty": true,
-   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "code_sha256": "b2c7acf3c464e42d1d2a322df5611d66b5d1fb9f4bc3b459bae64bcfc275e7e6",
    "python": "3.10.6",
    "numpy": "2.2.6",
    "scikit_learn": "1.7.2",
@@ -63,11 +63,11 @@
     },
     "source_scorer": {
      "path": "data\\models\\source_scorer.joblib",
-     "sha256": "21f2bd73ec05c8b162c4708ba41de1c4444e0397c317dae5f233f6b043a78e55"
+     "sha256": "5f7d73ed873df48317bbd19a108b2816fd1657f5f196fdd5ec71af3abf3cca62"
     },
     "source_scorer_no_history": {
      "path": "data\\models\\source_scorer_no_history.joblib",
-     "sha256": "276232a9a305c833107b6b45e2fe6fe49cd36cb475321b41995f050d12860be2"
+     "sha256": "c54ddae99df90f87fcf4ea7da98846e2d80e50eb0c23f9a908d91816360b3a9c"
     },
     "signature_classifier": {
      "path": "data\\models\\signature_classifier.joblib",
@@ -90,7 +90,7 @@
    "runs": 100,
    "n_samples": 202550,
    "attack_share": 0.49879535917057516,
-   "trained_at": "2026-10-29 23:29:20",
+   "trained_at": "2026-10-31 16:24:38",
    "sklearn_version": "1.7.2"
   }
  },
