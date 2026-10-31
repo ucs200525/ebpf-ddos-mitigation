@@ -1,0 +1,21 @@
+# Datasets (download separately)
+data/cic-ddos-2019/
+data/external/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Runtime output
+logs/
+*.log
+main_pid.txt
+
+# Local virtual environments
+.venv*/
+
+# AI / IDE tooling
+.claude/
+.vscode/
+.idea/

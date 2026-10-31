@@ -1,0 +1,107 @@
+{
+ "provenance": {
+  "script": "scripts/reproduce_all.py",
+  "parameters": {
+   "retrain": false,
+   "check_model": false,
+   "only": null
+  },
+  "created": "2026-10-29 23:26:47 +0530",
+  "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+  "git_dirty": true,
+  "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+  "python": "3.10.6",
+  "numpy": "2.2.6",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu_count": 16,
+  "inputs": {}
+ },
+ "steps": [
+  {
+   "step": "evaluate",
+   "command": "python -m src.ml.model_trainer evaluate --seed 3030 --runs 300 --e2e-runs 200 --report D:\\4.own\\project\\rapid-corona\\project\\data\\models\\ddos_classifier_eval.json",
+   "exit_code": 0,
+   "seconds": 92.6,
+   "outputs": {
+    "data\\models\\ddos_classifier_eval.json": "9afcaeed6038eb13cb5c5278e45290593768c9353225fe896d6f970c1a63d0b3"
+   }
+  },
+  {
+   "step": "mitigation",
+   "command": "python scripts/mitigation_experiment.py",
+   "exit_code": 0,
+   "seconds": 403.5,
+   "outputs": {
+    "data\\results\\mitigation_results.json": "bb47e6a68e57a2e297e824db2173799a3e13761c52c01b234272ff929015dbdb",
+    "data\\models\\source_scorer.joblib": "21f2bd73ec05c8b162c4708ba41de1c4444e0397c317dae5f233f6b043a78e55",
+    "data\\models\\source_scorer_no_history.joblib": "276232a9a305c833107b6b45e2fe6fe49cd36cb475321b41995f050d12860be2",
+    "data\\models\\signature_classifier.joblib": "5b6daff6fd36df479e8ec3dd94fec6d5f2c2e03a334194f97d184739f75037b0"
+   }
+  },
+  {
+   "step": "trace",
+   "command": "python scripts/trace_experiment.py --trace 200803181400",
+   "exit_code": 0,
+   "seconds": 39.7,
+   "outputs": {
+    "data\\results\\trace_results.json": "5edf5ca25f6edcdad40f65bcf9d6f77749758474603e533e0cf59cbb61235ec8"
+   }
+  },
+  {
+   "step": "cic",
+   "command": "python scripts/cic_experiment.py",
+   "exit_code": 0,
+   "seconds": 440.5,
+   "outputs": {
+    "data\\results\\cic_results.json": "e608c374c1f3d4dff2608e8c9dea59330c3db5db34a8450026c5a165966396b6",
+    "data\\models\\cic_window_model.joblib": "a7d7b30b5a30d8f7758788e33c1f53ba7ac19a8fcfbdbc84782a00d75c22d499",
+    "data\\models\\cic_flow_model.joblib": "273916a42ef85eacffbf6e8a00d64fde98a327f2cc1532f2a866b5a3fe4b7dae",
+    "data\\models\\cic_source_scorer.joblib": "b4263a34092b7b33425a1dcb186f8f05b447e92707f42177d087befc7a0d4934"
+   }
+  },
+  {
+   "step": "safety",
+   "command": "python scripts/safety_experiment.py",
+   "exit_code": 0,
+   "seconds": 135.4,
+   "outputs": {
+    "data\\results\\safety_results.json": "5e6f8e164b95387982551ee1c1ce2595dee96b26f0afce29b1fc4ddc89c0b6cd"
+   }
+  },
+  {
+   "step": "benchmark",
+   "command": "python scripts/benchmark.py",
+   "exit_code": 0,
+   "seconds": 57.6,
+   "outputs": {
+    "data\\results\\benchmark_results.json": "86ce9e5f5b6bc3010fff10b6252a6d22a1f678691efbd75876f740cea172c358"
+   }
+  },
+  {
+   "step": "figures",
+   "command": "python scripts/make_figures.py",
+   "exit_code": 0,
+   "seconds": 12.3,
+   "outputs": {
+    "docs\\figures\\RESULTS_TABLES.md": "26aeb86e4e60a75b73d9e8f4e3bac9d3190d54caf72bdc351406c5fc7ab27609"
+   }
+  },
+  {
+   "step": "verify",
+   "command": "python scripts/verify_results.py",
+   "exit_code": 0,
+   "seconds": 0.3,
+   "outputs": {
+    "docs\\RESULT_VERIFICATION.md": "feb23581e11a0005148831c5c1d85b298f54eac21b603ed719183b6b77355399"
+   }
+  },
+  {
+   "step": "tests",
+   "command": "python -m pytest -q",
+   "exit_code": 0,
+   "seconds": 8.2,
+   "outputs": {}
+  }
+ ]
+}

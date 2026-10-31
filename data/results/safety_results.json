@@ -1,0 +1,3302 @@
+{
+ "protocol": {
+  "scenarios": [
+   "flash_crowd",
+   "heavy_legit",
+   "udp_flood_with_crowd",
+   "udp_flood_spoofed_with_crowd"
+  ],
+  "seeds": [
+   5001,
+   5002,
+   5003,
+   5004,
+   5005
+  ],
+  "runs_per_scenario_per_seed": 40,
+  "setting": "realistic (client_churn=0.1, bot_pre_activity=0.3)",
+  "data": "synthetic (src/ml/traffic_dataset.py); no run used for training or tuning",
+  "provenance": {
+   "script": "scripts/safety_experiment.py",
+   "parameters": {
+    "runs": 40,
+    "seeds": 5,
+    "workers": 5
+   },
+   "created": "2026-10-29 23:45:18 +0530",
+   "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+   "git_dirty": true,
+   "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+   "python": "3.10.6",
+   "numpy": "2.2.6",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-10-10.0.26200-SP0",
+   "cpu_count": 16,
+   "inputs": {
+    "detection_model": {
+     "path": "data\\models\\ddos_classifier.joblib",
+     "sha256": "e2d945208978c498bcbb630c296c17c6da162e57916cf0745adca2f89fe698dd"
+    },
+    "source_scorer": {
+     "path": "data\\models\\source_scorer.joblib",
+     "sha256": "21f2bd73ec05c8b162c4708ba41de1c4444e0397c317dae5f233f6b043a78e55"
+    },
+    "source_scorer_no_history": {
+     "path": "data\\models\\source_scorer_no_history.joblib",
+     "sha256": "276232a9a305c833107b6b45e2fe6fe49cd36cb475321b41995f050d12860be2"
+    },
+    "signature_classifier": {
+     "path": "data\\models\\signature_classifier.joblib",
+     "sha256": "5b6daff6fd36df479e8ec3dd94fec6d5f2c2e03a334194f97d184739f75037b0"
+    },
+    "mitigation_results (thresholds)": {
+     "path": "data\\results\\mitigation_results.json",
+     "sha256": "bb47e6a68e57a2e297e824db2173799a3e13761c52c01b234272ff929015dbdb"
+    }
+   }
+  }
+ },
+ "scenarios": {
+  "flash_crowd": {
+   "detector": {
+    "hybrid": {
+     "flagged_seconds_pct": {
+      "mean": 5.066363283797882,
+      "std": 3.556489347888937
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 5.066363283797882,
+      "std": 3.556489347888937
+     }
+    },
+    "statistical": {
+     "flagged_seconds_pct": {
+      "mean": 41.40092932776457,
+      "std": 2.910787033342749
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 41.40092932776457,
+      "std": 2.910787033342749
+     }
+    }
+   },
+   "policies": {
+    "P0": {
+     "name": "Top-5 blacklist (permanent)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 8.093795173278496,
+      "std": 2.051304955950299
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 91.9062048267215,
+      "std": 2.0513049559502985
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 8.093795173278496,
+      "std": 2.051304955950299
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.05310069840768582,
+      "std": 0.02717346176557092
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P1": {
+     "name": "Top-5 blacklist (TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 4.142658573440611,
+      "std": 1.237068406673899
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 95.85734142655939,
+      "std": 1.237068406673902
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 4.142658573440611,
+      "std": 1.237068406673899
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.05310069840768582,
+      "std": 0.02717346176557092
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P2": {
+     "name": "History-based filter",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 20.393118565660558,
+      "std": 10.280804159853526
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 79.60688143433944,
+      "std": 10.280804159853522
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 20.393118565660558,
+      "std": 10.280804159853526
+     },
+     "legit_sources_hit_pct": {
+      "mean": 11.303988315490107,
+      "std": 4.910463820600347
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P3a": {
+     "name": "Aggregate rate limit (1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 18.28178830882944,
+      "std": 9.446352717227509
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 81.71821169117057,
+      "std": 9.446352717227507
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 18.28178830882944,
+      "std": 9.446352717227509
+     },
+     "legit_sources_hit_pct": {
+      "mean": 9.914657849760282,
+      "std": 5.0807446482871
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P3b": {
+     "name": "Per-source rate limit (p99 of normal)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 1.2662670110186678,
+      "std": 0.7178644642831048
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 98.73373298898133,
+      "std": 0.717864464283101
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 1.2662670110186678,
+      "std": 0.7178644642831048
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.09277859446182343,
+      "std": 0.05690362816950683
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 6.1637710968516215,
+      "std": 3.0386082861127113
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 93.8362289031484,
+      "std": 3.03860828611271
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 6.1637710968516215,
+      "std": 3.0386082861127113
+     },
+     "legit_sources_hit_pct": {
+      "mean": 7.659272772009409,
+      "std": 4.253931960938474
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "AHIF": {
+     "name": "Adaptive history filter (AHIF, /32, 1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 19.680521885534535,
+      "std": 10.119149069236814
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 80.31947811446545,
+      "std": 10.11914906923681
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 19.680521885534535,
+      "std": 10.119149069236814
+     },
+     "legit_sources_hit_pct": {
+      "mean": 10.052321825644817,
+      "std": 4.6365537643361865
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "SIG": {
+     "name": "Signature filter (SIG, trained classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 2.147421057488729,
+      "std": 1.1372929694807137
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 97.85257894251126,
+      "std": 1.1372929694807137
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 2.147421057488729,
+      "std": 1.1372929694807137
+     },
+     "legit_sources_hit_pct": {
+      "mean": 1.1209474181833592,
+      "std": 0.5713772007275105
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "SIG-oracle": {
+     "name": "Signature filter (SIG, perfect signature classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-spoof-guard": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 4.8282131827692725,
+      "std": 2.572221643690505
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 95.17178681723072,
+      "std": 2.5722216436905074
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 4.8282131827692725,
+      "std": 2.572221643690505
+     },
+     "legit_sources_hit_pct": {
+      "mean": 2.1000181050326114,
+      "std": 1.492002446063031
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-block-only": {
+     "name": "Source scoring (block>=0.8, limit>=0.8, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 6.1527450521775915,
+      "std": 3.0337988717047133
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 93.84725494782242,
+      "std": 3.0337988717047106
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 6.1527450521775915,
+      "std": 3.0337988717047133
+     },
+     "legit_sources_hit_pct": {
+      "mean": 7.6589336423855885,
+      "std": 4.253617240249503
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-expiry": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL infs)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 6.947722890429603,
+      "std": 3.4074699079729753
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 93.0522771095704,
+      "std": 3.4074699079729736
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 6.947722890429603,
+      "std": 3.4074699079729753
+     },
+     "legit_sources_hit_pct": {
+      "mean": 7.659781466445139,
+      "std": 4.254404201065815
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-history": {
+     "name": "Source scoring without per-source history features (ablation)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 4.621615961335296,
+      "std": 2.5964367215432413
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 95.3783840386647,
+      "std": 2.5964367215432422
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 4.621615961335296,
+      "std": 2.5964367215432413
+     },
+     "legit_sources_hit_pct": {
+      "mean": 8.103028664549667,
+      "std": 4.409712327241027
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    }
+   }
+  },
+  "heavy_legit": {
+   "detector": {
+    "hybrid": {
+     "flagged_seconds_pct": {
+      "mean": 22.37050886581937,
+      "std": 3.4554380562812193
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 22.37050886581937,
+      "std": 3.4554380562812193
+     }
+    },
+    "statistical": {
+     "flagged_seconds_pct": {
+      "mean": 53.450061417885365,
+      "std": 5.84278201400574
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 53.450061417885365,
+      "std": 5.84278201400574
+     }
+    }
+   },
+   "policies": {
+    "P0": {
+     "name": "Top-5 blacklist (permanent)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 78.32380484268306,
+      "std": 4.591710332076957
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 21.676195157316936,
+      "std": 4.591710332076957
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 78.32380484268306,
+      "std": 4.591710332076957
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.4973044303075588,
+      "std": 0.05681383692924409
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P1": {
+     "name": "Top-5 blacklist (TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 74.04226455687052,
+      "std": 4.893386428732366
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 25.95773544312948,
+      "std": 4.893386428732366
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 74.04226455687052,
+      "std": 4.893386428732366
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.4973044303075588,
+      "std": 0.05681383692924409
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P2": {
+     "name": "History-based filter",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 3.134879440044152,
+      "std": 1.1520856202738254
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 96.86512055995586,
+      "std": 1.1520856202738285
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 3.134879440044152,
+      "std": 1.1520856202738254
+     },
+     "legit_sources_hit_pct": {
+      "mean": 41.52794914562894,
+      "std": 5.22580727406935
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P3a": {
+     "name": "Aggregate rate limit (1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 60.176713930440414,
+      "std": 5.490846378854591
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 39.823286069559586,
+      "std": 5.490846378854591
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 60.176713930440414,
+      "std": 5.490846378854591
+     },
+     "legit_sources_hit_pct": {
+      "mean": 41.76748759580131,
+      "std": 3.067902910093014
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P3b": {
+     "name": "Per-source rate limit (p99 of normal)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 69.01132107348889,
+      "std": 5.082449704897104
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 30.988678926511113,
+      "std": 5.082449704897104
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 69.01132107348889,
+      "std": 5.082449704897104
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.5883000384887469,
+      "std": 0.09616144734002595
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 67.46861187568956,
+      "std": 6.197026515637061
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 32.531388124310446,
+      "std": 6.197026515637061
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 67.46861187568956,
+      "std": 6.197026515637061
+     },
+     "legit_sources_hit_pct": {
+      "mean": 2.192225356640158,
+      "std": 0.1969253497178373
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "AHIF": {
+     "name": "Adaptive history filter (AHIF, /32, 1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 60.293939728505926,
+      "std": 5.474285246848003
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 39.706060271494074,
+      "std": 5.474285246848003
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 60.293939728505926,
+      "std": 5.474285246848003
+     },
+     "legit_sources_hit_pct": {
+      "mean": 54.534570141455866,
+      "std": 2.6335291982614044
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "SIG": {
+     "name": "Signature filter (SIG, trained classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 4.929248662199113,
+      "std": 2.823276899013294
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 95.07075133780089,
+      "std": 2.823276899013293
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 4.929248662199113,
+      "std": 2.823276899013294
+     },
+     "legit_sources_hit_pct": {
+      "mean": 5.129239926320702,
+      "std": 0.4033472339259992
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "SIG-oracle": {
+     "name": "Signature filter (SIG, perfect signature classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-spoof-guard": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 67.46861187568956,
+      "std": 6.197026515637061
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 32.531388124310446,
+      "std": 6.197026515637061
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 67.46861187568956,
+      "std": 6.197026515637061
+     },
+     "legit_sources_hit_pct": {
+      "mean": 2.192225356640158,
+      "std": 0.1969253497178373
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-block-only": {
+     "name": "Source scoring (block>=0.8, limit>=0.8, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 57.47772070852593,
+      "std": 6.643617745471035
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 42.52227929147407,
+      "std": 6.643617745471035
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 57.47772070852593,
+      "std": 6.643617745471035
+     },
+     "legit_sources_hit_pct": {
+      "mean": 2.1445138340302137,
+      "std": 0.2078548517510068
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-expiry": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL infs)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 67.93056544975623,
+      "std": 5.928614900716596
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 32.069434550243784,
+      "std": 5.928614900716596
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 67.93056544975623,
+      "std": 5.928614900716596
+     },
+     "legit_sources_hit_pct": {
+      "mean": 2.2042741007473734,
+      "std": 0.19760523377284375
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-history": {
+     "name": "Source scoring without per-source history features (ablation)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 72.73890589367068,
+      "std": 5.365432164282014
+     },
+     "attack_passed_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 27.261094106329324,
+      "std": 5.365432164282014
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 72.73890589367068,
+      "std": 5.365432164282014
+     },
+     "legit_sources_hit_pct": {
+      "mean": 9.92049947440815,
+      "std": 2.7987339756381666
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_detection_delay_s": null,
+     "legit_loss_post_attack_pct": null,
+     "median_recovery_s": null,
+     "recovered_runs_pct": null,
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 0.0,
+      "std": 0.0
+     }
+    }
+   }
+  },
+  "udp_flood_with_crowd": {
+   "detector": {
+    "hybrid": {
+     "flagged_seconds_pct": {
+      "mean": 41.60172247527614,
+      "std": 1.4342628007426612
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 2.9935060666202236,
+      "std": 0.7367155513385607
+     }
+    },
+    "statistical": {
+     "flagged_seconds_pct": {
+      "mean": 50.814443035403855,
+      "std": 2.1936064190185647
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 15.678132865246909,
+      "std": 2.487062294954652
+     }
+    }
+   },
+   "policies": {
+    "P0": {
+     "name": "Top-5 blacklist (permanent)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 57.41732117064669,
+      "std": 14.367965562880682
+     },
+     "legit_loss_pct": {
+      "mean": 9.985439844325184,
+      "std": 1.854307368555511
+     },
+     "attack_passed_pct": {
+      "mean": 42.58267882935331,
+      "std": 14.367965562880682
+     },
+     "legit_retained_pct": {
+      "mean": 90.01456015567481,
+      "std": 1.8543073685555114
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 9.985439844325184,
+      "std": 1.854307368555511
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.09154565571153815,
+      "std": 0.01056165525650573
+     },
+     "mitigated_runs_pct": {
+      "mean": 46.0,
+      "std": 6.6332495807108
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.7,
+      "std": 0.6
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 54.77703567442471,
+      "std": 14.924172062478657
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 49.3051948051948,
+      "std": 15.057762511080718
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P1": {
+     "name": "Top-5 blacklist (TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 55.29967100808138,
+      "std": 13.79139251167294
+     },
+     "legit_loss_pct": {
+      "mean": 6.704059817031153,
+      "std": 1.546685981193648
+     },
+     "attack_passed_pct": {
+      "mean": 44.70032899191862,
+      "std": 13.79139251167294
+     },
+     "legit_retained_pct": {
+      "mean": 93.29594018296885,
+      "std": 1.546685981193646
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 6.704059817031153,
+      "std": 1.546685981193648
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.09154565571153815,
+      "std": 0.01056165525650573
+     },
+     "mitigated_runs_pct": {
+      "mean": 46.0,
+      "std": 6.6332495807108
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.7,
+      "std": 0.6
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 35.17259435335588,
+      "std": 15.653719539008398
+     },
+     "median_recovery_s": {
+      "mean": 2.6,
+      "std": 5.2
+     },
+     "recovered_runs_pct": {
+      "mean": 85.78571428571429,
+      "std": 13.132760096609625
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P2": {
+     "name": "History-based filter",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 59.48459442969225,
+      "std": 13.463645817529466
+     },
+     "legit_loss_pct": {
+      "mean": 66.43460259324033,
+      "std": 8.814065032098847
+     },
+     "attack_passed_pct": {
+      "mean": 40.51540557030775,
+      "std": 13.463645817529464
+     },
+     "legit_retained_pct": {
+      "mean": 33.56539740675968,
+      "std": 8.814065032098847
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 66.43460259324033,
+      "std": 8.814065032098847
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 83.29498454647417,
+      "std": 2.6916865716884413
+     },
+     "mitigated_runs_pct": {
+      "mean": 50.5,
+      "std": 2.449489742783178
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 3.043888495108843,
+      "std": 0.5358296310608136
+     },
+     "median_recovery_s": {
+      "mean": 8.9,
+      "std": 0.19999999999999998
+     },
+     "recovered_runs_pct": {
+      "mean": 96.75,
+      "std": 4.153311931459037
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P3a": {
+     "name": "Aggregate rate limit (1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 90.65069773998141,
+      "std": 2.867378912900448
+     },
+     "legit_loss_pct": {
+      "mean": 69.70159569679203,
+      "std": 9.747514734975223
+     },
+     "attack_passed_pct": {
+      "mean": 9.349302260018598,
+      "std": 2.867378912900448
+     },
+     "legit_retained_pct": {
+      "mean": 30.298404303207974,
+      "std": 9.747514734975223
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 69.70159569679203,
+      "std": 9.747514734975223
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 56.571461662752256,
+      "std": 4.195188855765363
+     },
+     "mitigated_runs_pct": {
+      "mean": 73.5,
+      "std": 6.244997998398398
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P3b": {
+     "name": "Per-source rate limit (p99 of normal)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 71.79928958996348,
+      "std": 10.9447075149572
+     },
+     "legit_loss_pct": {
+      "mean": 2.7014278077610894,
+      "std": 0.9921093221078582
+     },
+     "attack_passed_pct": {
+      "mean": 28.200710410036514,
+      "std": 10.944707514957198
+     },
+     "legit_retained_pct": {
+      "mean": 97.29857219223891,
+      "std": 0.9921093221078573
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 2.7014278077610894,
+      "std": 0.9921093221078582
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.38781331289785953,
+      "std": 0.3033151423076668
+     },
+     "mitigated_runs_pct": {
+      "mean": 50.0,
+      "std": 6.519202405202649
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.2,
+      "std": 0.4
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 3.977921424844832,
+      "std": 1.665474583818302
+     },
+     "median_recovery_s": {
+      "mean": 0.2,
+      "std": 0.4000000000000001
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 86.79064275519404,
+      "std": 4.721719835099365
+     },
+     "legit_loss_pct": {
+      "mean": 18.42070358459822,
+      "std": 2.035950251286396
+     },
+     "attack_passed_pct": {
+      "mean": 13.209357244805958,
+      "std": 4.721719835099365
+     },
+     "legit_retained_pct": {
+      "mean": 81.57929641540179,
+      "std": 2.035950251286395
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 18.42070358459822,
+      "std": 2.035950251286396
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 41.216557614373755,
+      "std": 4.104896102967096
+     },
+     "mitigated_runs_pct": {
+      "mean": 62.5,
+      "std": 1.5811388300841898
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.13939109906078817,
+      "std": 0.0673686877371559
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "AHIF": {
+     "name": "Adaptive history filter (AHIF, /32, 1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 91.66887956738823,
+      "std": 2.966665186624007
+     },
+     "legit_loss_pct": {
+      "mean": 68.21350760094155,
+      "std": 9.741312598680953
+     },
+     "attack_passed_pct": {
+      "mean": 8.331120432611764,
+      "std": 2.966665186624007
+     },
+     "legit_retained_pct": {
+      "mean": 31.786492399058442,
+      "std": 9.741312598680953
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 68.21350760094155,
+      "std": 9.741312598680953
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 85.12412620571888,
+      "std": 2.5048349917956574
+     },
+     "mitigated_runs_pct": {
+      "mean": 67.0,
+      "std": 5.0990195135927845
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.8955579083385965,
+      "std": 0.4998172863842474
+     },
+     "median_recovery_s": {
+      "mean": 8.7,
+      "std": 0.6000000000000001
+     },
+     "recovered_runs_pct": {
+      "mean": 96.75,
+      "std": 4.153311931459037
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "SIG": {
+     "name": "Signature filter (SIG, trained classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 90.75094024740345,
+      "std": 4.49199654404558
+     },
+     "legit_loss_pct": {
+      "mean": 7.475524914949379,
+      "std": 1.2434745698335699
+     },
+     "attack_passed_pct": {
+      "mean": 9.249059752596565,
+      "std": 4.49199654404558
+     },
+     "legit_retained_pct": {
+      "mean": 92.52447508505063,
+      "std": 1.243474569833572
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 7.475524914949379,
+      "std": 1.2434745698335699
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 8.071858343981216,
+      "std": 0.2465142460171722
+     },
+     "mitigated_runs_pct": {
+      "mean": 83.5,
+      "std": 5.612486080160912
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.4929156170720423,
+      "std": 0.6656317940103872
+     },
+     "median_recovery_s": {
+      "mean": 7.2,
+      "std": 2.0149441679609885
+     },
+     "recovered_runs_pct": {
+      "mean": 98.0,
+      "std": 4.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "SIG-oracle": {
+     "name": "Signature filter (SIG, perfect signature classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 96.93771383667436,
+      "std": 1.9582950537802668
+     },
+     "legit_loss_pct": {
+      "mean": 0.5928049176241441,
+      "std": 0.28530397000317753
+     },
+     "attack_passed_pct": {
+      "mean": 3.062286163325626,
+      "std": 1.9582950537802668
+     },
+     "legit_retained_pct": {
+      "mean": 99.40719508237585,
+      "std": 0.28530397000318014
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.5928049176241441,
+      "std": 0.28530397000317753
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 5.584016151277279,
+      "std": 1.928138927134889
+     },
+     "mitigated_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.4169992277762059,
+      "std": 0.3348265614887322
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 98.75,
+      "std": 2.5
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-spoof-guard": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 86.16926168547226,
+      "std": 5.026662596610996
+     },
+     "legit_loss_pct": {
+      "mean": 15.439046220606963,
+      "std": 1.180849365182837
+     },
+     "attack_passed_pct": {
+      "mean": 13.830738314527732,
+      "std": 5.026662596610996
+     },
+     "legit_retained_pct": {
+      "mean": 84.56095377939305,
+      "std": 1.180849365182835
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 15.439046220606963,
+      "std": 1.180849365182837
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 22.671864173840373,
+      "std": 3.3975727209225064
+     },
+     "mitigated_runs_pct": {
+      "mean": 53.5,
+      "std": 3.0
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.13939109906078817,
+      "std": 0.0673686877371559
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-block-only": {
+     "name": "Source scoring (block>=0.8, limit>=0.8, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 83.25651998260005,
+      "std": 6.562432126587382
+     },
+     "legit_loss_pct": {
+      "mean": 18.317225120502787,
+      "std": 1.9697713787489408
+     },
+     "attack_passed_pct": {
+      "mean": 16.743480017399953,
+      "std": 6.562432126587382
+     },
+     "legit_retained_pct": {
+      "mean": 81.68277487949722,
+      "std": 1.9697713787489404
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 18.317225120502787,
+      "std": 1.9697713787489408
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 41.35858013517036,
+      "std": 4.0877012566019415
+     },
+     "mitigated_runs_pct": {
+      "mean": 56.0,
+      "std": 2.5495097567963922
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.13885938214687316,
+      "std": 0.06750662825657165
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-expiry": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL infs)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 87.50987088571668,
+      "std": 4.760231527896159
+     },
+     "legit_loss_pct": {
+      "mean": 21.644736069591332,
+      "std": 2.6341518248830122
+     },
+     "attack_passed_pct": {
+      "mean": 12.490129114283326,
+      "std": 4.760231527896159
+     },
+     "legit_retained_pct": {
+      "mean": 78.35526393040867,
+      "std": 2.6341518248830145
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 21.644736069591332,
+      "std": 2.6341518248830122
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 41.33025933451814,
+      "std": 4.03374807947435
+     },
+     "mitigated_runs_pct": {
+      "mean": 62.5,
+      "std": 1.5811388300841898
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.24590259275716,
+      "std": 0.1864356830590528
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 98.75,
+      "std": 2.5
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-history": {
+     "name": "Source scoring without per-source history features (ablation)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 71.18086864320264,
+      "std": 12.553001176753494
+     },
+     "legit_loss_pct": {
+      "mean": 16.94689927598106,
+      "std": 2.81017135255637
+     },
+     "attack_passed_pct": {
+      "mean": 28.819131356797357,
+      "std": 12.553001176753494
+     },
+     "legit_retained_pct": {
+      "mean": 83.05310072401895,
+      "std": 2.810171352556371
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 16.94689927598106,
+      "std": 2.81017135255637
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 47.207929084524025,
+      "std": 4.958865237560319
+     },
+     "mitigated_runs_pct": {
+      "mean": 63.5,
+      "std": 2.0
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 95.5,
+      "std": 1.0
+     },
+     "median_detection_delay_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 24.409950266003403,
+      "std": 15.183230397089572
+     },
+     "median_recovery_s": {
+      "mean": 1.3,
+      "std": 1.32664991614216
+     },
+     "recovered_runs_pct": {
+      "mean": 73.05194805194806,
+      "std": 13.886754956849119
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    }
+   }
+  },
+  "udp_flood_spoofed_with_crowd": {
+   "detector": {
+    "hybrid": {
+     "flagged_seconds_pct": {
+      "mean": 41.69768332529415,
+      "std": 3.025240083572333
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 2.651754367886962,
+      "std": 0.16518017283139957
+     }
+    },
+    "statistical": {
+     "flagged_seconds_pct": {
+      "mean": 51.67332684549192,
+      "std": 2.8674863966497908
+     },
+     "benign_seconds_flagged_pct": {
+      "mean": 14.838512041544533,
+      "std": 5.948940056264759
+     }
+    }
+   },
+   "policies": {
+    "P0": {
+     "name": "Top-5 blacklist (permanent)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 11.861484275642113,
+      "std": 2.293758726106991
+     },
+     "attack_passed_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 88.1385157243579,
+      "std": 2.2937587261069923
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 11.861484275642113,
+      "std": 2.293758726106991
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.1461882356168787,
+      "std": 0.012411331885451623
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 41.09730616754462,
+      "std": 8.890514769653775
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 37.00854700854701,
+      "std": 9.980622616748718
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P1": {
+     "name": "Top-5 blacklist (TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 9.41148992099588,
+      "std": 2.257565107591473
+     },
+     "attack_passed_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 90.58851007900412,
+      "std": 2.2575651075914753
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 9.41148992099588,
+      "std": 2.257565107591473
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.1461882356168787,
+      "std": 0.012411331885451623
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 23.570704042116915,
+      "std": 7.322279272124781
+     },
+     "median_recovery_s": {
+      "mean": 3.3,
+      "std": 4.093897898091744
+     },
+     "recovered_runs_pct": {
+      "mean": 72.73504273504274,
+      "std": 18.467077358400577
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P2": {
+     "name": "History-based filter",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 96.44331606928657,
+      "std": 4.401098750353643
+     },
+     "legit_loss_pct": {
+      "mean": 58.52357466121191,
+      "std": 15.325074935050463
+     },
+     "attack_passed_pct": {
+      "mean": 3.5566839307134273,
+      "std": 4.401098750353643
+     },
+     "legit_retained_pct": {
+      "mean": 41.47642533878809,
+      "std": 15.325074935050463
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 58.52357466121191,
+      "std": 15.325074935050463
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 79.88782597210768,
+      "std": 5.987233188900572
+     },
+     "mitigated_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 4.2,
+      "std": 1.6000000000000003
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.329517894651299,
+      "std": 0.677996392239236
+     },
+     "median_recovery_s": {
+      "mean": 7.7,
+      "std": 0.39999999999999997
+     },
+     "recovered_runs_pct": {
+      "mean": 91.4957264957265,
+      "std": 8.530325598576932
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P3a": {
+     "name": "Aggregate rate limit (1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 89.07534120119283,
+      "std": 5.704253584374874
+     },
+     "legit_loss_pct": {
+      "mean": 62.086829638361564,
+      "std": 17.371606438276604
+     },
+     "attack_passed_pct": {
+      "mean": 10.924658798807169,
+      "std": 5.704253584374874
+     },
+     "legit_retained_pct": {
+      "mean": 37.913170361638436,
+      "std": 17.371606438276604
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 62.086829638361564,
+      "std": 17.371606438276604
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 46.52515788995419,
+      "std": 6.702821159433779
+     },
+     "mitigated_runs_pct": {
+      "mean": 67.0,
+      "std": 5.338539126015656
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 1.9,
+      "std": 1.562049935181331
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P3b": {
+     "name": "Per-source rate limit (p99 of normal)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 5.548813468989389,
+      "std": 6.31025793943407
+     },
+     "legit_loss_pct": {
+      "mean": 3.391293489431132,
+      "std": 0.9034396021893175
+     },
+     "attack_passed_pct": {
+      "mean": 94.4511865310106,
+      "std": 6.31025793943407
+     },
+     "legit_retained_pct": {
+      "mean": 96.60870651056888,
+      "std": 0.9034396021893162
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 3.391293489431132,
+      "std": 0.9034396021893175
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.39498174560246985,
+      "std": 0.2526574804389748
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.5,
+      "std": 1.0
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 12.0,
+      "std": 0.0
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.3452276218555257,
+      "std": 0.8161874281074628
+     },
+     "median_recovery_s": {
+      "mean": 0.3,
+      "std": 0.6000000000000001
+     },
+     "recovered_runs_pct": {
+      "mean": 97.77777777777779,
+      "std": 4.4444444444444455
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 86.24192489043942,
+      "std": 6.04286205265597
+     },
+     "legit_loss_pct": {
+      "mean": 48.034328532036376,
+      "std": 15.127264047676121
+     },
+     "attack_passed_pct": {
+      "mean": 13.75807510956059,
+      "std": 6.042862052655971
+     },
+     "legit_retained_pct": {
+      "mean": 51.96567146796362,
+      "std": 15.127264047676118
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 48.034328532036376,
+      "std": 15.127264047676121
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 44.86525246769837,
+      "std": 5.693734280092062
+     },
+     "mitigated_runs_pct": {
+      "mean": 68.0,
+      "std": 3.6742346141747673
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 2.7,
+      "std": 1.6
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.26086599490302864,
+      "std": 0.3685671400363262
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "AHIF": {
+     "name": "Adaptive history filter (AHIF, /32, 1.5x baseline)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 96.44331606928657,
+      "std": 4.401098750353643
+     },
+     "legit_loss_pct": {
+      "mean": 58.06152371070184,
+      "std": 16.323199651977987
+     },
+     "attack_passed_pct": {
+      "mean": 3.5566839307134273,
+      "std": 4.401098750353643
+     },
+     "legit_retained_pct": {
+      "mean": 41.93847628929816,
+      "std": 16.323199651977983
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 58.06152371070184,
+      "std": 16.323199651977987
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 72.99416641612144,
+      "std": 6.609433438395699
+     },
+     "mitigated_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 4.2,
+      "std": 1.6000000000000003
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.2626546303071056,
+      "std": 0.7037234224446209
+     },
+     "median_recovery_s": {
+      "mean": 7.5,
+      "std": 0.4472135954999579
+     },
+     "recovered_runs_pct": {
+      "mean": 93.03418803418803,
+      "std": 6.115144207378921
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "SIG": {
+     "name": "Signature filter (SIG, trained classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 90.9044447997011,
+      "std": 5.386500588424234
+     },
+     "legit_loss_pct": {
+      "mean": 7.3676279864281895,
+      "std": 2.0283935050664215
+     },
+     "attack_passed_pct": {
+      "mean": 9.095555200298914,
+      "std": 5.386500588424233
+     },
+     "legit_retained_pct": {
+      "mean": 92.63237201357182,
+      "std": 2.0283935050664224
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 7.3676279864281895,
+      "std": 2.0283935050664215
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 7.861560009574115,
+      "std": 0.6481987253237763
+     },
+     "mitigated_runs_pct": {
+      "mean": 86.5,
+      "std": 5.612486080160912
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 4.1,
+      "std": 1.3564659966250536
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 2.0414415098417704,
+      "std": 0.718854738482669
+     },
+     "median_recovery_s": {
+      "mean": 6.7,
+      "std": 2.227105745132009
+     },
+     "recovered_runs_pct": {
+      "mean": 96.23931623931624,
+      "std": 4.731060684819846
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "SIG-oracle": {
+     "name": "Signature filter (SIG, perfect signature classifier)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 96.44331606928657,
+      "std": 4.401098750353643
+     },
+     "legit_loss_pct": {
+      "mean": 0.00015587112610700147,
+      "std": 0.0002887804388064276
+     },
+     "attack_passed_pct": {
+      "mean": 3.5566839307134273,
+      "std": 4.401098750353643
+     },
+     "legit_retained_pct": {
+      "mean": 99.99984412887389,
+      "std": 0.0002887804388051811
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 0.00015587112610700147,
+      "std": 0.0002887804388064276
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 0.0007209780462792242,
+      "std": 0.0006642233376849574
+     },
+     "mitigated_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 4.2,
+      "std": 1.6000000000000003
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-spoof-guard": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_loss_pct": {
+      "mean": 19.286795538845023,
+      "std": 5.618067627586257
+     },
+     "attack_passed_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "legit_retained_pct": {
+      "mean": 80.71320446115499,
+      "std": 5.618067627586261
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 19.286795538845023,
+      "std": 5.618067627586257
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 19.731854528459632,
+      "std": 2.3208108713417244
+     },
+     "mitigated_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "median_time_to_mitigate_s": null,
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.26086599490302864,
+      "std": 0.3685671400363262
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-block-only": {
+     "name": "Source scoring (block>=0.8, limit>=0.8, TTL 30s)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 86.2473652100521,
+      "std": 6.038806973688642
+     },
+     "legit_loss_pct": {
+      "mean": 47.67408222018228,
+      "std": 14.875213349751455
+     },
+     "attack_passed_pct": {
+      "mean": 13.75263478994791,
+      "std": 6.038806973688642
+     },
+     "legit_retained_pct": {
+      "mean": 52.32591777981772,
+      "std": 14.875213349751455
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 47.67408222018228,
+      "std": 14.875213349751455
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 44.82197656516566,
+      "std": 5.654937911221995
+     },
+     "mitigated_runs_pct": {
+      "mean": 68.0,
+      "std": 3.6742346141747673
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 2.7,
+      "std": 1.6
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.2605028083996611,
+      "std": 0.36872706530442945
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 100.0,
+      "std": 0.0
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-expiry": {
+     "name": "Source scoring (block>=0.8, limit>=0.7, TTL infs)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 86.19098824081277,
+      "std": 6.066448833969833
+     },
+     "legit_loss_pct": {
+      "mean": 48.96257337910829,
+      "std": 15.253702780460017
+     },
+     "attack_passed_pct": {
+      "mean": 13.809011759187225,
+      "std": 6.066448833969833
+     },
+     "legit_retained_pct": {
+      "mean": 51.03742662089171,
+      "std": 15.253702780460019
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 48.96257337910829,
+      "std": 15.253702780460017
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 44.96384656117441,
+      "std": 5.760208613618797
+     },
+     "mitigated_runs_pct": {
+      "mean": 68.0,
+      "std": 3.6742346141747673
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 2.7,
+      "std": 1.6
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 0.5380568791314837,
+      "std": 0.7649045395664977
+     },
+     "median_recovery_s": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "recovered_runs_pct": {
+      "mean": 96.11111111111111,
+      "std": 4.843221048378526
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    },
+    "P4-no-history": {
+     "name": "Source scoring without per-source history features (ablation)",
+     "detector": "hybrid",
+     "attack_drop_pct": {
+      "mean": 85.80982972300588,
+      "std": 6.15446836630663
+     },
+     "legit_loss_pct": {
+      "mean": 48.927525859319694,
+      "std": 15.32085772922908
+     },
+     "attack_passed_pct": {
+      "mean": 14.19017027699412,
+      "std": 6.15446836630663
+     },
+     "legit_retained_pct": {
+      "mean": 51.07247414068031,
+      "std": 15.320857729229083
+     },
+     "legit_loss_attack_runs_pct": {
+      "mean": 48.927525859319694,
+      "std": 15.32085772922908
+     },
+     "legit_loss_benign_runs_pct": {
+      "mean": 0.0,
+      "std": 0.0
+     },
+     "legit_sources_hit_pct": {
+      "mean": 49.22271440594079,
+      "std": 5.743858296234183
+     },
+     "mitigated_runs_pct": {
+      "mean": 67.5,
+      "std": 4.183300132670378
+     },
+     "median_time_to_mitigate_s": {
+      "mean": 2.4,
+      "std": 1.7435595774162693
+     },
+     "detected_runs_pct": {
+      "mean": 96.0,
+      "std": 4.06201920231798
+     },
+     "median_detection_delay_s": {
+      "mean": 3.2,
+      "std": 1.6000000000000003
+     },
+     "legit_loss_post_attack_pct": {
+      "mean": 14.379777783133417,
+      "std": 3.762680515249884
+     },
+     "median_recovery_s": {
+      "mean": 4.2,
+      "std": 6.493073232299172
+     },
+     "recovered_runs_pct": {
+      "mean": 73.16239316239316,
+      "std": 20.945664725001038
+     },
+     "n_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     },
+     "n_attack_runs": {
+      "mean": 40.0,
+      "std": 0.0
+     }
+    }
+   }
+  }
+ }
+}

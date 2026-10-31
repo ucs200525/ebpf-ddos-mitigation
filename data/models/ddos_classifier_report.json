@@ -1,0 +1,175 @@
+{
+  "data_source": "synthetic-window",
+  "train_runs": 600,
+  "test_runs": 300,
+  "seed": 7,
+  "train_windows": 55256,
+  "test_windows": 27262,
+  "test_metrics": {
+    "accuracy": 0.9950480522338787,
+    "precision": 0.9901785714285715,
+    "recall": 0.9897367246764837,
+    "f1": 0.989957598750279,
+    "confusion_matrix": [
+      [
+        20473,
+        66
+      ],
+      [
+        69,
+        6654
+      ]
+    ],
+    "roc_auc": 0.9998792073187323
+  },
+  "per_scenario": {
+    "flash_crowd": {
+      "windows": 3520,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "icmp_flood": {
+      "windows": 1595,
+      "attack_recall": 0.9959239130434783,
+      "benign_fpr": 0.008149010477299184
+    },
+    "low_rate_syn": {
+      "windows": 2569,
+      "attack_recall": 0.9780123131046614,
+      "benign_fpr": 0.004888268156424581
+    },
+    "low_rate_udp": {
+      "windows": 2384,
+      "attack_recall": 0.9828897338403042,
+      "benign_fpr": 0.014264264264264264
+    },
+    "mixed_flood": {
+      "windows": 2603,
+      "attack_recall": 0.9880239520958084,
+      "benign_fpr": 0.0020920502092050207
+    },
+    "normal": {
+      "windows": 3496,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "normal_bursty": {
+      "windows": 4577,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "syn_flood": {
+      "windows": 1354,
+      "attack_recall": 0.9977777777777778,
+      "benign_fpr": 0.012168141592920354
+    },
+    "syn_flood_spoofed": {
+      "windows": 1596,
+      "attack_recall": 0.9970149253731343,
+      "benign_fpr": 0.005399568034557235
+    },
+    "udp_flood": {
+      "windows": 1894,
+      "attack_recall": 0.9952718676122931,
+      "benign_fpr": 0.004770992366412214
+    },
+    "udp_flood_spoofed": {
+      "windows": 1674,
+      "attack_recall": 0.9969834087481146,
+      "benign_fpr": 0.008902077151335312
+    }
+  },
+  "cv_results": [
+    {
+      "n_estimators": 100,
+      "max_depth": 8,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.987057462485547,
+      "cv_f1_std": 0.001744362036730069
+    },
+    {
+      "n_estimators": 100,
+      "max_depth": 8,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9870734112892,
+      "cv_f1_std": 0.0018219038988151785
+    },
+    {
+      "n_estimators": 100,
+      "max_depth": 12,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.9908663014751188,
+      "cv_f1_std": 0.001102456135657054
+    },
+    {
+      "n_estimators": 100,
+      "max_depth": 12,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9904863126397663,
+      "cv_f1_std": 0.0010437389469041968
+    },
+    {
+      "n_estimators": 100,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.9917766073657142,
+      "cv_f1_std": 0.0012036763808721833
+    },
+    {
+      "n_estimators": 100,
+      "max_depth": null,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9907338143600757,
+      "cv_f1_std": 0.0013169310991618139
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.987317384847822,
+      "cv_f1_std": 0.0016707825643712446
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9873075536798817,
+      "cv_f1_std": 0.0015559128556801429
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": 12,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.9910814701527502,
+      "cv_f1_std": 0.0010736892440692636
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": 12,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9904241132527838,
+      "cv_f1_std": 0.0010930439376433372
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "cv_f1_mean": 0.9919141380473697,
+      "cv_f1_std": 0.0008920125010956984
+    },
+    {
+      "n_estimators": 200,
+      "max_depth": null,
+      "min_samples_leaf": 5,
+      "cv_f1_mean": 0.9909641169871388,
+      "cv_f1_std": 0.0011483838025753168
+    }
+  ],
+  "chosen_params": {
+    "n_estimators": 100,
+    "max_depth": null,
+    "min_samples_leaf": 2,
+    "cv_f1_mean": 0.9917766073657142,
+    "cv_f1_std": 0.0012036763808721833
+  }
+}

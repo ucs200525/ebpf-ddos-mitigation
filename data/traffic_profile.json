@@ -1,0 +1,13 @@
+{
+  "avg_pps": 0.08730204401696447,
+  "peak_pps": 522.0,
+  "avg_bps": 7.109072936424425,
+  "peak_bps": 463204.0,
+  "tcp_ratio": 0.9815721649484536,
+  "udp_ratio": 0.005154639175257732,
+  "icmp_ratio": 0.01327319587628866,
+  "unique_ips_per_minute": 0.0,
+  "learning_samples": 2411,
+  "last_updated": 1793275664.6037152,
+  "is_learned": true
+}

@@ -1,0 +1,129 @@
+{
+  "model_path": "D:\\4.own\\project\\rapid-corona\\project\\data\\models\\ddos_classifier.joblib",
+  "training_date": "2026-10-26 22:21:39",
+  "stored_evaluation_source": "synthetic-window",
+  "data": "synthetic (src/ml/traffic_dataset.py)",
+  "window_eval": {
+    "runs": 300,
+    "seed": 3030
+  },
+  "end_to_end": {
+    "runs": 200,
+    "seed": 3031
+  },
+  "provenance": {
+    "script": "python -m src.ml.model_trainer evaluate",
+    "parameters": {
+      "command": "evaluate",
+      "model_path": "D:\\4.own\\project\\rapid-corona\\project\\data\\models\\ddos_classifier.joblib",
+      "runs": 300,
+      "e2e_runs": 200,
+      "seed": 3030,
+      "report": "D:\\4.own\\project\\rapid-corona\\project\\data\\models\\ddos_classifier_eval.json"
+    },
+    "created": "2026-10-29 23:26:48 +0530",
+    "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+    "git_dirty": true,
+    "code_sha256": "b6a19315f3399dc5d6c03eae5e55336f70f61275bb8f2d2363e219b8a9a429b5",
+    "python": "3.10.6",
+    "numpy": "2.2.6",
+    "scikit_learn": "1.7.2",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "cpu_count": 16,
+    "inputs": {
+      "model": {
+        "path": "data\\models\\ddos_classifier.joblib",
+        "sha256": "e2d945208978c498bcbb630c296c17c6da162e57916cf0745adca2f89fe698dd"
+      }
+    }
+  },
+  "window_metrics": {
+    "accuracy": 0.9953996129833145,
+    "precision": 0.9902789518174133,
+    "recall": 0.9919559695173582,
+    "f1": 0.9911167512690355,
+    "confusion_matrix": [
+      [
+        20234,
+        69
+      ],
+      [
+        57,
+        7029
+      ]
+    ],
+    "roc_auc": 0.9997891803695602,
+    "windows": 27389
+  },
+  "per_scenario": {
+    "flash_crowd": {
+      "windows": 3031,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "icmp_flood": {
+      "windows": 1822,
+      "attack_recall": 0.997709049255441,
+      "benign_fpr": 0.007376185458377239
+    },
+    "low_rate_syn": {
+      "windows": 1979,
+      "attack_recall": 0.9891566265060241,
+      "benign_fpr": 0.010443864229765013
+    },
+    "low_rate_udp": {
+      "windows": 2810,
+      "attack_recall": 0.9811616954474097,
+      "benign_fpr": 0.01171875
+    },
+    "mixed_flood": {
+      "windows": 1848,
+      "attack_recall": 0.9862700228832952,
+      "benign_fpr": 0.004106776180698152
+    },
+    "normal": {
+      "windows": 4604,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "normal_bursty": {
+      "windows": 3881,
+      "attack_recall": null,
+      "benign_fpr": 0.0
+    },
+    "syn_flood": {
+      "windows": 1703,
+      "attack_recall": 0.9933949801849405,
+      "benign_fpr": 0.006342494714587738
+    },
+    "syn_flood_spoofed": {
+      "windows": 2467,
+      "attack_recall": 0.9971857410881801,
+      "benign_fpr": 0.005710206995003569
+    },
+    "udp_flood": {
+      "windows": 1769,
+      "attack_recall": 1.0,
+      "benign_fpr": 0.009699321047526674
+    },
+    "udp_flood_spoofed": {
+      "windows": 1475,
+      "attack_recall": 0.9970326409495549,
+      "benign_fpr": 0.004993757802746567
+    }
+  },
+  "statistical_detector": {
+    "attack_second_recall": 0.7720718941339128,
+    "benign_second_fpr": 0.25787203450754853,
+    "attack_runs_detected": "89/110",
+    "benign_runs_with_false_alarm": "67/90",
+    "median_detection_delay_s": 0.0
+  },
+  "hybrid_detector": {
+    "attack_second_recall": 0.9271183093027849,
+    "benign_second_fpr": 0.029547088425593098,
+    "attack_runs_detected": "110/110",
+    "benign_runs_with_false_alarm": "26/90",
+    "median_detection_delay_s": 4.0
+  }
+}

@@ -1,0 +1,1621 @@
+{
+ "setup": {
+  "what": "real CIC-DDoS2019 test-day (03-11) packets replayed with tcpreplay at their original timing into a veth pair; the system (main.py) runs on the victim end with its XDP program in generic mode; tcpdump on the victim end records what XDP passed",
+  "configs": {
+   "P0": "top-5 blacklist, synthetic models",
+   "P4": "P4, synthetic models",
+   "P4cic": "P4, cic set without level 3 (detector: synthetic + CIC 01-12)",
+   "P4L3": "P4+L3, cic set (flow classifier verifies P4)"
+  },
+  "environment": [
+   "kernel: 6.6.87.2-microsoft-standard-WSL2",
+   "date: 2026-10-31T14:51:13+05:30",
+   "tcpreplay version: 4.5.4 (build git:v4.5.4) (debug)",
+   "tcpdump version 4.99.5",
+   "bpftool v7.8.0",
+   "16",
+   "OK: compiled, maps created and program accepted by the kernel verifier"
+  ],
+  "manifest": {
+   "day": "03-11",
+   "snap": 128,
+   "pre_s": 120,
+   "attack_s": 180,
+   "post_s": 60,
+   "quiet_s": 300,
+   "attacker": "172.16.0.5",
+   "protected": "192.168.50.0/24"
+  },
+  "runs": [
+   {
+    "name": "01_NetBIOS",
+    "scenario": "NetBIOS",
+    "start": 1541249965,
+    "attack_onset": 1541250085,
+    "end": 1541250325,
+    "packets": 3857813,
+    "attack_packets": 3853265,
+    "legit_packets": 4548
+   },
+   {
+    "name": "02_LDAP",
+    "scenario": "LDAP",
+    "start": 1541251194,
+    "attack_onset": 1541251314,
+    "end": 1541251554,
+    "packets": 4416719,
+    "attack_packets": 4402989,
+    "legit_packets": 13730
+   },
+   {
+    "name": "03_MSSQL",
+    "scenario": "MSSQL",
+    "start": 1541251922,
+    "attack_onset": 1541252042,
+    "end": 1541252282,
+    "packets": 6097779,
+    "attack_packets": 6085579,
+    "legit_packets": 12200
+   },
+   {
+    "name": "04_UDP",
+    "scenario": "UDP",
+    "start": 1541253038,
+    "attack_onset": 1541253158,
+    "end": 1541253398,
+    "packets": 4921301,
+    "attack_packets": 4915705,
+    "legit_packets": 5596
+   },
+   {
+    "name": "05_Syn",
+    "scenario": "Syn",
+    "start": 1541255237,
+    "attack_onset": 1541255357,
+    "end": 1541255597,
+    "packets": 6327163,
+    "attack_packets": 6321510,
+    "legit_packets": 5653
+   },
+   {
+    "name": "q1_no-attack",
+    "scenario": "no attack",
+    "start": 1541249598,
+    "attack_onset": null,
+    "end": 1541249898,
+    "packets": 38073,
+    "attack_packets": 544,
+    "legit_packets": 37529
+   },
+   {
+    "name": "q2_no-attack",
+    "scenario": "no attack",
+    "start": 1541250627,
+    "attack_onset": null,
+    "end": 1541250927,
+    "packets": 21575,
+    "attack_packets": 324,
+    "legit_packets": 21251
+   }
+  ]
+ },
+ "per_run": {
+  "01_NetBIOS": {
+   "P0": {
+    "attack_sent": 3853265,
+    "attack_passed": 11598,
+    "legit_sent": 4548,
+    "legit_passed": 3077,
+    "attack_dropped_pct": 99.69900850317848,
+    "legit_dropped_pct": 32.34388742304309,
+    "legit_sources": 60,
+    "legit_sources_hit": 13,
+    "mitigation_delay_s": 2,
+    "alerts": 4,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 3857813,
+     "captured_after_xdp": 14675,
+     "xdp_mode": "generic",
+     "xdp_total": 3857807,
+     "xdp_passed": 14675,
+     "xdp_dropped": 3843132,
+     "tcpdump_dropped": 0,
+     "replayed": 3857813,
+     "replay_seconds": 359.55,
+     "replay_pps": 10729.34,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 3853265,
+    "attack_passed": 12493,
+    "legit_sent": 4548,
+    "legit_passed": 4384,
+    "attack_dropped_pct": 99.67578144768139,
+    "legit_dropped_pct": 3.6059806508355323,
+    "legit_sources": 60,
+    "legit_sources_hit": 2,
+    "mitigation_delay_s": 2,
+    "alerts": 4,
+    "blocks_logged": 4,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 3857813,
+     "captured_after_xdp": 16877,
+     "xdp_mode": "generic",
+     "xdp_total": 3857807,
+     "xdp_passed": 16877,
+     "xdp_dropped": 3840930,
+     "tcpdump_dropped": 0,
+     "replayed": 3857813,
+     "replay_seconds": 359.55,
+     "replay_pps": 10729.34,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 3853265,
+    "attack_passed": 12740,
+    "legit_sent": 4548,
+    "legit_passed": 4384,
+    "attack_dropped_pct": 99.66937129940453,
+    "legit_dropped_pct": 3.6059806508355323,
+    "legit_sources": 60,
+    "legit_sources_hit": 2,
+    "mitigation_delay_s": 2,
+    "alerts": 4,
+    "blocks_logged": 4,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 3857813,
+     "captured_after_xdp": 17124,
+     "xdp_mode": "generic",
+     "xdp_total": 3857805,
+     "xdp_passed": 17124,
+     "xdp_dropped": 3840681,
+     "tcpdump_dropped": 0,
+     "replayed": 3857813,
+     "replay_seconds": 359.55,
+     "replay_pps": 10729.34,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 3853265,
+    "attack_passed": 16256,
+    "legit_sent": 4548,
+    "legit_passed": 4548,
+    "attack_dropped_pct": 99.57812400652433,
+    "legit_dropped_pct": 0.0,
+    "legit_sources": 60,
+    "legit_sources_hit": 0,
+    "mitigation_delay_s": 2,
+    "alerts": 5,
+    "blocks_logged": 1,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 3857813,
+     "captured_after_xdp": 20804,
+     "xdp_mode": "generic",
+     "xdp_total": 3857813,
+     "xdp_passed": 20804,
+     "xdp_dropped": 3837009,
+     "tcpdump_dropped": 0,
+     "replayed": 3857813,
+     "replay_seconds": 359.55,
+     "replay_pps": 10729.34,
+     "replay_failed": 0
+    }
+   }
+  },
+  "02_LDAP": {
+   "P0": {
+    "attack_sent": 4402989,
+    "attack_passed": 15350,
+    "legit_sent": 13730,
+    "legit_passed": 11531,
+    "attack_dropped_pct": 99.6513731921656,
+    "legit_dropped_pct": 16.016023306627822,
+    "legit_sources": 112,
+    "legit_sources_hit": 24,
+    "mitigation_delay_s": 1,
+    "alerts": 5,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4416719,
+     "captured_after_xdp": 26881,
+     "xdp_mode": "generic",
+     "xdp_total": 4416719,
+     "xdp_passed": 26881,
+     "xdp_dropped": 4389838,
+     "tcpdump_dropped": 0,
+     "replayed": 4416719,
+     "replay_seconds": 355.01,
+     "replay_pps": 12440.99,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 4402989,
+    "attack_passed": 16538,
+    "legit_sent": 13730,
+    "legit_passed": 13468,
+    "attack_dropped_pct": 99.62439152130518,
+    "legit_dropped_pct": 1.9082301529497452,
+    "legit_sources": 112,
+    "legit_sources_hit": 4,
+    "mitigation_delay_s": 1,
+    "alerts": 5,
+    "blocks_logged": 5,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4416719,
+     "captured_after_xdp": 30006,
+     "xdp_mode": "generic",
+     "xdp_total": 4416712,
+     "xdp_passed": 30006,
+     "xdp_dropped": 4386706,
+     "tcpdump_dropped": 0,
+     "replayed": 4416719,
+     "replay_seconds": 355.01,
+     "replay_pps": 12440.99,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 4402989,
+    "attack_passed": 12662,
+    "legit_sent": 13730,
+    "legit_passed": 13458,
+    "attack_dropped_pct": 99.7124226292639,
+    "legit_dropped_pct": 1.9810633648943918,
+    "legit_sources": 112,
+    "legit_sources_hit": 9,
+    "mitigation_delay_s": 1,
+    "alerts": 5,
+    "blocks_logged": 11,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4416719,
+     "captured_after_xdp": 26120,
+     "xdp_mode": "generic",
+     "xdp_total": 4416713,
+     "xdp_passed": 26120,
+     "xdp_dropped": 4390593,
+     "tcpdump_dropped": 0,
+     "replayed": 4416719,
+     "replay_seconds": 355.01,
+     "replay_pps": 12440.99,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 4402989,
+    "attack_passed": 19346,
+    "legit_sent": 13730,
+    "legit_passed": 13730,
+    "attack_dropped_pct": 99.56061666290786,
+    "legit_dropped_pct": 0.0,
+    "legit_sources": 112,
+    "legit_sources_hit": 0,
+    "mitigation_delay_s": 1,
+    "alerts": 6,
+    "blocks_logged": 1,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4416719,
+     "captured_after_xdp": 33076,
+     "xdp_mode": "generic",
+     "xdp_total": 4416719,
+     "xdp_passed": 33076,
+     "xdp_dropped": 4383643,
+     "tcpdump_dropped": 0,
+     "replayed": 4416719,
+     "replay_seconds": 355.01,
+     "replay_pps": 12440.99,
+     "replay_failed": 0
+    }
+   }
+  },
+  "03_MSSQL": {
+   "P0": {
+    "attack_sent": 6085579,
+    "attack_passed": 8790,
+    "legit_sent": 12200,
+    "legit_passed": 6593,
+    "attack_dropped_pct": 99.85556016937747,
+    "legit_dropped_pct": 45.959016393442624,
+    "legit_sources": 101,
+    "legit_sources_hit": 41,
+    "mitigation_delay_s": 1,
+    "alerts": 4,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6097779,
+     "captured_after_xdp": 15383,
+     "xdp_mode": "generic",
+     "xdp_total": 6097775,
+     "xdp_passed": 15383,
+     "xdp_dropped": 6082392,
+     "tcpdump_dropped": 0,
+     "replayed": 6097779,
+     "replay_seconds": 359.99,
+     "replay_pps": 16938.33,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 6085579,
+    "attack_passed": 15344,
+    "legit_sent": 12200,
+    "legit_passed": 10054,
+    "attack_dropped_pct": 99.74786293958225,
+    "legit_dropped_pct": 17.59016393442623,
+    "legit_sources": 101,
+    "legit_sources_hit": 16,
+    "mitigation_delay_s": 1,
+    "alerts": 5,
+    "blocks_logged": 16,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6097779,
+     "captured_after_xdp": 25398,
+     "xdp_mode": "generic",
+     "xdp_total": 6097779,
+     "xdp_passed": 25398,
+     "xdp_dropped": 6072381,
+     "tcpdump_dropped": 0,
+     "replayed": 6097779,
+     "replay_seconds": 359.99,
+     "replay_pps": 16938.33,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 6085579,
+    "attack_passed": 12234,
+    "legit_sent": 12200,
+    "legit_passed": 9898,
+    "attack_dropped_pct": 99.79896736202093,
+    "legit_dropped_pct": 18.868852459016395,
+    "legit_sources": 101,
+    "legit_sources_hit": 15,
+    "mitigation_delay_s": 1,
+    "alerts": 4,
+    "blocks_logged": 18,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6097779,
+     "captured_after_xdp": 22132,
+     "xdp_mode": "generic",
+     "xdp_total": 6097775,
+     "xdp_passed": 22132,
+     "xdp_dropped": 6075643,
+     "tcpdump_dropped": 0,
+     "replayed": 6097779,
+     "replay_seconds": 359.99,
+     "replay_pps": 16938.33,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 6085579,
+    "attack_passed": 15400,
+    "legit_sent": 12200,
+    "legit_passed": 12013,
+    "attack_dropped_pct": 99.74694273133255,
+    "legit_dropped_pct": 1.5327868852459017,
+    "legit_sources": 101,
+    "legit_sources_hit": 4,
+    "mitigation_delay_s": 1,
+    "alerts": 5,
+    "blocks_logged": 9,
+    "releases_logged": 1,
+    "checks": {
+     "sent": 6097779,
+     "captured_after_xdp": 27413,
+     "xdp_mode": "generic",
+     "xdp_total": 6097773,
+     "xdp_passed": 27413,
+     "xdp_dropped": 6070360,
+     "tcpdump_dropped": 0,
+     "replayed": 6097779,
+     "replay_seconds": 359.99,
+     "replay_pps": 16938.33,
+     "replay_failed": 0
+    }
+   }
+  },
+  "04_UDP": {
+   "P0": {
+    "attack_sent": 4915705,
+    "attack_passed": 316,
+    "legit_sent": 5596,
+    "legit_passed": 3467,
+    "attack_dropped_pct": 99.99357162400916,
+    "legit_dropped_pct": 38.04503216583274,
+    "legit_sources": 64,
+    "legit_sources_hit": 24,
+    "mitigation_delay_s": 0,
+    "alerts": 5,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4921301,
+     "captured_after_xdp": 3783,
+     "xdp_mode": "generic",
+     "xdp_total": 4921299,
+     "xdp_passed": 3783,
+     "xdp_dropped": 4917516,
+     "tcpdump_dropped": 0,
+     "replayed": 4921301,
+     "replay_seconds": 359.46,
+     "replay_pps": 13690.48,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 4915705,
+    "attack_passed": 4132,
+    "legit_sent": 5596,
+    "legit_passed": 5410,
+    "attack_dropped_pct": 99.91594288103131,
+    "legit_dropped_pct": 3.3238027162258756,
+    "legit_sources": 64,
+    "legit_sources_hit": 2,
+    "mitigation_delay_s": 2,
+    "alerts": 5,
+    "blocks_logged": 4,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4921301,
+     "captured_after_xdp": 9542,
+     "xdp_mode": "generic",
+     "xdp_total": 4921295,
+     "xdp_passed": 9542,
+     "xdp_dropped": 4911753,
+     "tcpdump_dropped": 0,
+     "replayed": 4921301,
+     "replay_seconds": 359.46,
+     "replay_pps": 13690.48,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 4915705,
+    "attack_passed": 5964,
+    "legit_sent": 5596,
+    "legit_passed": 5413,
+    "attack_dropped_pct": 99.8786745746541,
+    "legit_dropped_pct": 3.270192994996426,
+    "legit_sources": 64,
+    "legit_sources_hit": 3,
+    "mitigation_delay_s": 2,
+    "alerts": 5,
+    "blocks_logged": 5,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4921301,
+     "captured_after_xdp": 11377,
+     "xdp_mode": "generic",
+     "xdp_total": 4921301,
+     "xdp_passed": 11377,
+     "xdp_dropped": 4909924,
+     "tcpdump_dropped": 0,
+     "replayed": 4921301,
+     "replay_seconds": 359.46,
+     "replay_pps": 13690.48,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 4915705,
+    "attack_passed": 3468,
+    "legit_sent": 5596,
+    "legit_passed": 5596,
+    "attack_dropped_pct": 99.92945060779685,
+    "legit_dropped_pct": 0.0,
+    "legit_sources": 64,
+    "legit_sources_hit": 0,
+    "mitigation_delay_s": 2,
+    "alerts": 5,
+    "blocks_logged": 2,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 4921301,
+     "captured_after_xdp": 9064,
+     "xdp_mode": "generic",
+     "xdp_total": 4921299,
+     "xdp_passed": 9064,
+     "xdp_dropped": 4912235,
+     "tcpdump_dropped": 0,
+     "replayed": 4921301,
+     "replay_seconds": 359.46,
+     "replay_pps": 13690.48,
+     "replay_failed": 0
+    }
+   }
+  },
+  "05_Syn": {
+   "P0": {
+    "attack_sent": 6321510,
+    "attack_passed": 1222,
+    "legit_sent": 5653,
+    "legit_passed": 4073,
+    "attack_dropped_pct": 99.9806691755609,
+    "legit_dropped_pct": 27.949761188749335,
+    "legit_sources": 82,
+    "legit_sources_hit": 29,
+    "mitigation_delay_s": 0,
+    "alerts": 4,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6327163,
+     "captured_after_xdp": 5295,
+     "xdp_mode": "generic",
+     "xdp_total": 6327159,
+     "xdp_passed": 5295,
+     "xdp_dropped": 6321864,
+     "tcpdump_dropped": 0,
+     "replayed": 6327163,
+     "replay_seconds": 359.97,
+     "replay_pps": 17576.53,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 6321510,
+    "attack_passed": 1222,
+    "legit_sent": 5653,
+    "legit_passed": 5536,
+    "attack_dropped_pct": 99.9806691755609,
+    "legit_dropped_pct": 2.0696975057491596,
+    "legit_sources": 82,
+    "legit_sources_hit": 5,
+    "mitigation_delay_s": 0,
+    "alerts": 4,
+    "blocks_logged": 7,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6327163,
+     "captured_after_xdp": 6758,
+     "xdp_mode": "generic",
+     "xdp_total": 6327163,
+     "xdp_passed": 6758,
+     "xdp_dropped": 6320405,
+     "tcpdump_dropped": 0,
+     "replayed": 6327163,
+     "replay_seconds": 359.98,
+     "replay_pps": 17576.29,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 6321510,
+    "attack_passed": 1222,
+    "legit_sent": 5653,
+    "legit_passed": 5513,
+    "attack_dropped_pct": 99.9806691755609,
+    "legit_dropped_pct": 2.4765611179904474,
+    "legit_sources": 82,
+    "legit_sources_hit": 5,
+    "mitigation_delay_s": 0,
+    "alerts": 4,
+    "blocks_logged": 7,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6327163,
+     "captured_after_xdp": 6735,
+     "xdp_mode": "generic",
+     "xdp_total": 6327163,
+     "xdp_passed": 6735,
+     "xdp_dropped": 6320428,
+     "tcpdump_dropped": 0,
+     "replayed": 6327163,
+     "replay_seconds": 359.97,
+     "replay_pps": 17576.53,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 6321510,
+    "attack_passed": 2222,
+    "legit_sent": 5653,
+    "legit_passed": 5653,
+    "attack_dropped_pct": 99.9648501702916,
+    "legit_dropped_pct": 0.0,
+    "legit_sources": 82,
+    "legit_sources_hit": 0,
+    "mitigation_delay_s": 0,
+    "alerts": 4,
+    "blocks_logged": 1,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 6327163,
+     "captured_after_xdp": 7875,
+     "xdp_mode": "generic",
+     "xdp_total": 6327163,
+     "xdp_passed": 7875,
+     "xdp_dropped": 6319288,
+     "tcpdump_dropped": 0,
+     "replayed": 6327163,
+     "replay_seconds": 359.97,
+     "replay_pps": 17576.53,
+     "replay_failed": 0
+    }
+   }
+  },
+  "q1_no-attack": {
+   "P0": {
+    "attack_sent": 544,
+    "attack_passed": 148,
+    "legit_sent": 37529,
+    "legit_passed": 10397,
+    "attack_dropped_pct": 72.79411764705883,
+    "legit_dropped_pct": 72.29609102294226,
+    "legit_sources": 98,
+    "legit_sources_hit": 10,
+    "alerts": 2,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 38073,
+     "captured_after_xdp": 10545,
+     "xdp_mode": "generic",
+     "xdp_total": 38071,
+     "xdp_passed": 10545,
+     "xdp_dropped": 27526,
+     "tcpdump_dropped": 0,
+     "replayed": 38073,
+     "replay_seconds": 297.73,
+     "replay_pps": 127.87,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 544,
+    "attack_passed": 544,
+    "legit_sent": 37529,
+    "legit_passed": 9002,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 76.01321644594847,
+    "legit_sources": 98,
+    "legit_sources_hit": 4,
+    "alerts": 2,
+    "blocks_logged": 4,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 38073,
+     "captured_after_xdp": 9546,
+     "xdp_mode": "generic",
+     "xdp_total": 38071,
+     "xdp_passed": 9546,
+     "xdp_dropped": 28525,
+     "tcpdump_dropped": 0,
+     "replayed": 38073,
+     "replay_seconds": 297.73,
+     "replay_pps": 127.87,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 544,
+    "attack_passed": 544,
+    "legit_sent": 37529,
+    "legit_passed": 10302,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 72.549228596552,
+    "legit_sources": 98,
+    "legit_sources_hit": 3,
+    "alerts": 1,
+    "blocks_logged": 3,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 38073,
+     "captured_after_xdp": 10846,
+     "xdp_mode": "generic",
+     "xdp_total": 38071,
+     "xdp_passed": 10846,
+     "xdp_dropped": 27225,
+     "tcpdump_dropped": 0,
+     "replayed": 38073,
+     "replay_seconds": 297.73,
+     "replay_pps": 127.87,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 544,
+    "attack_passed": 544,
+    "legit_sent": 37529,
+    "legit_passed": 37529,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 0.0,
+    "legit_sources": 98,
+    "legit_sources_hit": 0,
+    "alerts": 2,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 38073,
+     "captured_after_xdp": 38073,
+     "xdp_mode": "generic",
+     "xdp_total": 38073,
+     "xdp_passed": 38073,
+     "xdp_dropped": 0,
+     "tcpdump_dropped": 0,
+     "replayed": 38073,
+     "replay_seconds": 297.73,
+     "replay_pps": 127.87,
+     "replay_failed": 0
+    }
+   }
+  },
+  "q2_no-attack": {
+   "P0": {
+    "attack_sent": 324,
+    "attack_passed": 324,
+    "legit_sent": 21251,
+    "legit_passed": 18047,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 15.076937555879724,
+    "legit_sources": 122,
+    "legit_sources_hit": 8,
+    "alerts": 2,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 21575,
+     "captured_after_xdp": 18371,
+     "xdp_mode": "generic",
+     "xdp_total": 21575,
+     "xdp_passed": 18371,
+     "xdp_dropped": 3204,
+     "tcpdump_dropped": 0,
+     "replayed": 21575,
+     "replay_seconds": 298.96,
+     "replay_pps": 72.16,
+     "replay_failed": 0
+    }
+   },
+   "P4": {
+    "attack_sent": 324,
+    "attack_passed": 324,
+    "legit_sent": 21251,
+    "legit_passed": 19606,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 7.740812197073079,
+    "legit_sources": 122,
+    "legit_sources_hit": 5,
+    "alerts": 2,
+    "blocks_logged": 5,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 21575,
+     "captured_after_xdp": 19930,
+     "xdp_mode": "generic",
+     "xdp_total": 21573,
+     "xdp_passed": 19930,
+     "xdp_dropped": 1643,
+     "tcpdump_dropped": 0,
+     "replayed": 21575,
+     "replay_seconds": 298.96,
+     "replay_pps": 72.16,
+     "replay_failed": 0
+    }
+   },
+   "P4cic": {
+    "attack_sent": 324,
+    "attack_passed": 324,
+    "legit_sent": 21251,
+    "legit_passed": 19668,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 7.44906122064844,
+    "legit_sources": 122,
+    "legit_sources_hit": 5,
+    "alerts": 2,
+    "blocks_logged": 4,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 21575,
+     "captured_after_xdp": 19992,
+     "xdp_mode": "generic",
+     "xdp_total": 21573,
+     "xdp_passed": 19992,
+     "xdp_dropped": 1581,
+     "tcpdump_dropped": 0,
+     "replayed": 21575,
+     "replay_seconds": 298.96,
+     "replay_pps": 72.16,
+     "replay_failed": 0
+    }
+   },
+   "P4L3": {
+    "attack_sent": 324,
+    "attack_passed": 324,
+    "legit_sent": 21251,
+    "legit_passed": 21249,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 0.00941132182014964,
+    "legit_sources": 122,
+    "legit_sources_hit": 1,
+    "alerts": 2,
+    "blocks_logged": 0,
+    "releases_logged": 0,
+    "checks": {
+     "sent": 21575,
+     "captured_after_xdp": 21573,
+     "xdp_mode": "generic",
+     "xdp_total": 21573,
+     "xdp_passed": 21573,
+     "xdp_dropped": 0,
+     "tcpdump_dropped": 0,
+     "replayed": 21575,
+     "replay_seconds": 298.96,
+     "replay_pps": 72.16,
+     "replay_failed": 0
+    }
+   }
+  }
+ },
+ "attack_runs": {
+  "P0": {
+   "attack_sent": 25579048,
+   "legit_sent": 41727,
+   "attack_dropped_pct": 99.85427135521228,
+   "legit_dropped_pct": 31.121336305030315,
+   "legit_sources": 419,
+   "legit_sources_hit": 131,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4": {
+   "attack_sent": 25579048,
+   "legit_sent": 41727,
+   "attack_dropped_pct": 99.805586978843,
+   "legit_dropped_pct": 6.8900232463393,
+   "legit_sources": 419,
+   "legit_sources_hit": 29,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4cic": {
+   "attack_sent": 25579048,
+   "legit_sent": 41727,
+   "attack_dropped_pct": 99.82477064822741,
+   "legit_dropped_pct": 7.335777793754644,
+   "legit_sources": 419,
+   "legit_sources_hit": 34,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4L3": {
+   "attack_sent": 25579048,
+   "legit_sent": 41727,
+   "attack_dropped_pct": 99.77836548099836,
+   "legit_dropped_pct": 0.44815107724015624,
+   "legit_sources": 419,
+   "legit_sources_hit": 4,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  }
+ },
+ "quiet_runs": {
+  "P0": {
+   "attack_sent": 868,
+   "legit_sent": 58780,
+   "attack_dropped_pct": 45.6221198156682,
+   "legit_dropped_pct": 51.60939094930249,
+   "legit_sources": 220,
+   "legit_sources_hit": 18
+  },
+  "P4": {
+   "attack_sent": 868,
+   "legit_sent": 58780,
+   "attack_dropped_pct": 0.0,
+   "legit_dropped_pct": 51.33038448451855,
+   "legit_sources": 220,
+   "legit_sources_hit": 9
+  },
+  "P4cic": {
+   "attack_sent": 868,
+   "legit_sent": 58780,
+   "attack_dropped_pct": 0.0,
+   "legit_dropped_pct": 49.013269819666554,
+   "legit_sources": 220,
+   "legit_sources_hit": 8
+  },
+  "P4L3": {
+   "attack_sent": 868,
+   "legit_sent": 58780,
+   "attack_dropped_pct": 0.0,
+   "legit_dropped_pct": 0.003402517863218782,
+   "legit_sources": 220,
+   "legit_sources_hit": 1
+  }
+ },
+ "all_runs": {
+  "P0": {
+   "attack_sent": 25579916,
+   "legit_sent": 100507,
+   "attack_dropped_pct": 99.85243110258845,
+   "legit_dropped_pct": 43.103465430268535,
+   "legit_sources": 639,
+   "legit_sources_hit": 149,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4": {
+   "attack_sent": 25579916,
+   "legit_sent": 100507,
+   "attack_dropped_pct": 99.80220028869525,
+   "legit_dropped_pct": 32.88029689474365,
+   "legit_sources": 639,
+   "legit_sources_hit": 38,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4cic": {
+   "attack_sent": 25579916,
+   "legit_sent": 100507,
+   "attack_dropped_pct": 99.82138330712267,
+   "legit_dropped_pct": 31.710229138268975,
+   "legit_sources": 639,
+   "legit_sources_hit": 42,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  },
+  "P4L3": {
+   "attack_sent": 25579916,
+   "legit_sent": 100507,
+   "attack_dropped_pct": 99.77497971455418,
+   "legit_dropped_pct": 0.18804660371914395,
+   "legit_sources": 639,
+   "legit_sources_hit": 5,
+   "mitigation_delay_s_median": 1.0,
+   "mitigation_delay_s_max": 2.0
+  }
+ },
+ "offline_same_windows": {
+  "P0": {
+   "per_run": {
+    "01_NetBIOS": {
+     "attack_drop_pct": 99.93268046708441,
+     "legit_loss_pct": 29.375549692172385,
+     "legit_sources_hit_pct": 21.666666666666668,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "02_LDAP": {
+     "attack_drop_pct": 99.72180262090139,
+     "legit_loss_pct": 16.780772032046613,
+     "legit_sources_hit_pct": 20.535714285714285,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "03_MSSQL": {
+     "attack_drop_pct": 99.99398578179661,
+     "legit_loss_pct": 33.07377049180328,
+     "legit_sources_hit_pct": 31.683168316831683,
+     "median_time_to_mitigate_s": 0.0
+    },
+    "04_UDP": {
+     "attack_drop_pct": 99.99369368178115,
+     "legit_loss_pct": 36.34739099356683,
+     "legit_sources_hit_pct": 34.375,
+     "median_time_to_mitigate_s": 0.0
+    },
+    "05_Syn": {
+     "attack_drop_pct": 99.89978660161891,
+     "legit_loss_pct": 24.960198124889438,
+     "legit_sources_hit_pct": 23.170731707317074,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "q1_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 70.84388073223374,
+     "legit_sources_hit_pct": 7.142857142857143,
+     "median_time_to_mitigate_s": null
+    },
+    "q2_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 19.716719213213494,
+     "legit_sources_hit_pct": 7.377049180327869,
+     "median_time_to_mitigate_s": null
+    }
+   },
+   "mode": null,
+   "attack_runs": {
+    "attack_drop_pct": 99.91456288756329,
+    "legit_loss_pct": 26.64941165192801,
+    "legit_sources_hit_pct": 26.014319809069214
+   },
+   "quiet_runs": {
+    "attack_drop_pct": 0.0,
+    "legit_loss_pct": 52.359646138142224,
+    "legit_sources_hit_pct": 7.2727272727272725
+   },
+   "all_runs": {
+    "attack_drop_pct": 99.91117249955003,
+    "legit_loss_pct": 41.685653735560706,
+    "legit_sources_hit_pct": 19.561815336463223
+   }
+  },
+  "P4": {
+   "per_run": {
+    "01_NetBIOS": {
+     "attack_drop_pct": 99.93268046708441,
+     "legit_loss_pct": 4.335971855760775,
+     "legit_sources_hit_pct": 3.3333333333333335,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "02_LDAP": {
+     "attack_drop_pct": 99.72180262090139,
+     "legit_loss_pct": 1.0349599417334348,
+     "legit_sources_hit_pct": 2.6785714285714284,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "03_MSSQL": {
+     "attack_drop_pct": 99.82338574521833,
+     "legit_loss_pct": 13.898360655737704,
+     "legit_sources_hit_pct": 16.831683168316832,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "04_UDP": {
+     "attack_drop_pct": 99.95235556242694,
+     "legit_loss_pct": 3.252323087919943,
+     "legit_sources_hit_pct": 4.6875,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "05_Syn": {
+     "attack_drop_pct": 99.89978660161891,
+     "legit_loss_pct": 3.0957013974880594,
+     "legit_sources_hit_pct": 4.878048780487805,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "q1_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 69.84198886194676,
+     "legit_sources_hit_pct": 2.0408163265306123,
+     "median_time_to_mitigate_s": null
+    },
+    "q2_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 5.524445908427839,
+     "legit_sources_hit_pct": 4.098360655737705,
+     "median_time_to_mitigate_s": null
+    }
+   },
+   "mode": null,
+   "attack_runs": {
+    "attack_drop_pct": 99.86603074516299,
+    "legit_loss_pct": 5.732259687971818,
+    "legit_sources_hit_pct": 6.921241050119332
+   },
+   "quiet_runs": {
+    "attack_drop_pct": 0.0,
+    "legit_loss_pct": 46.58897584212317,
+    "legit_sources_hit_pct": 3.1818181818181817
+   },
+   "all_runs": {
+    "attack_drop_pct": 99.86264200398469,
+    "legit_loss_pct": 29.626692668172367,
+    "legit_sources_hit_pct": 5.633802816901408
+   }
+  },
+  "P4cic": {
+   "per_run": {
+    "01_NetBIOS": {
+     "attack_drop_pct": 99.93268046708441,
+     "legit_loss_pct": 4.335971855760775,
+     "legit_sources_hit_pct": 3.3333333333333335,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "02_LDAP": {
+     "attack_drop_pct": 99.72180262090139,
+     "legit_loss_pct": 1.0349599417334348,
+     "legit_sources_hit_pct": 2.6785714285714284,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "03_MSSQL": {
+     "attack_drop_pct": 99.82338574521833,
+     "legit_loss_pct": 13.94426229508197,
+     "legit_sources_hit_pct": 17.821782178217823,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "04_UDP": {
+     "attack_drop_pct": 99.93354808720214,
+     "legit_loss_pct": 3.252323087919943,
+     "legit_sources_hit_pct": 4.6875,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "05_Syn": {
+     "attack_drop_pct": 99.89978660161891,
+     "legit_loss_pct": 3.0957013974880594,
+     "legit_sources_hit_pct": 4.878048780487805,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "q1_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 69.84198886194676,
+     "legit_sources_hit_pct": 2.0408163265306123,
+     "median_time_to_mitigate_s": null
+    },
+    "q2_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 5.524445908427839,
+     "legit_sources_hit_pct": 4.098360655737705,
+     "median_time_to_mitigate_s": null
+    }
+   },
+   "mode": null,
+   "attack_runs": {
+    "attack_drop_pct": 99.86241638078162,
+    "legit_loss_pct": 5.745680254990775,
+    "legit_sources_hit_pct": 7.159904534606206
+   },
+   "quiet_runs": {
+    "attack_drop_pct": 0.0,
+    "legit_loss_pct": 46.58897584212317,
+    "legit_sources_hit_pct": 3.1818181818181817
+   },
+   "all_runs": {
+    "attack_drop_pct": 99.85902776224908,
+    "legit_loss_pct": 29.632264419393675,
+    "legit_sources_hit_pct": 5.790297339593114
+   }
+  },
+  "P4L3": {
+   "per_run": {
+    "01_NetBIOS": {
+     "attack_drop_pct": 99.93268046708441,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "02_LDAP": {
+     "attack_drop_pct": 99.72180262090139,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "03_MSSQL": {
+     "attack_drop_pct": 99.82338574521833,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "04_UDP": {
+     "attack_drop_pct": 99.94971219794516,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "05_Syn": {
+     "attack_drop_pct": 99.89978660161891,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": 1.0
+    },
+    "q1_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": null
+    },
+    "q2_no-attack": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 0.0,
+     "legit_sources_hit_pct": 0.0,
+     "median_time_to_mitigate_s": null
+    }
+   },
+   "mode": "allow",
+   "attack_runs": {
+    "attack_drop_pct": 99.86552275127674,
+    "legit_loss_pct": 0.0,
+    "legit_sources_hit_pct": 0.0
+   },
+   "quiet_runs": {
+    "attack_drop_pct": 0.0,
+    "legit_loss_pct": 0.0,
+    "legit_sources_hit_pct": 0.0
+   },
+   "all_runs": {
+    "attack_drop_pct": 99.86213402733614,
+    "legit_loss_pct": 0.0,
+    "legit_sources_hit_pct": 0.0
+   }
+  }
+ },
+ "provenance": {
+  "script": "scripts/cic_xdp_analyze.py",
+  "parameters": {
+   "out_dir": "/root/cic_xdp_runs/full2"
+  },
+  "created": "2026-10-31 15:34:50 +0530",
+  "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+  "git_dirty": true,
+  "code_sha256": "75c762d5d37ebbfa2b9e352417127d17c55b7dd7a337f0f94954b538dcaac3b3",
+  "python": "3.13.11",
+  "numpy": "2.4.6",
+  "scikit_learn": "1.7.2",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "cpu_count": 16,
+  "inputs": {}
+ },
+ "before_block_time_check": {
+  "note": "same replay on 29 Oct 2026: P4+L3 with evidence from the last complete 10 s window only, and a lifetime SYN guard",
+  "attack_runs": {
+   "P0": {
+    "attack_sent": 25579048,
+    "legit_sent": 41727,
+    "attack_dropped_pct": 99.84511151470532,
+    "legit_dropped_pct": 30.917631269921156,
+    "legit_sources": 419,
+    "legit_sources_hit": 135,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 1.0
+   },
+   "P4": {
+    "attack_sent": 25579048,
+    "legit_sent": 41727,
+    "attack_dropped_pct": 99.81720977262329,
+    "legit_dropped_pct": 7.28784719725837,
+    "legit_sources": 419,
+    "legit_sources_hit": 29,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   },
+   "P4cic": {
+    "attack_sent": 25579048,
+    "legit_sent": 41727,
+    "attack_dropped_pct": 99.80111456845462,
+    "legit_dropped_pct": 7.12488316917104,
+    "legit_sources": 419,
+    "legit_sources_hit": 30,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   },
+   "P4L3": {
+    "attack_sent": 25579048,
+    "legit_sent": 41727,
+    "attack_dropped_pct": 99.8504791890613,
+    "legit_dropped_pct": 4.2298751407961275,
+    "legit_sources": 419,
+    "legit_sources_hit": 25,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   }
+  },
+  "quiet_runs": {
+   "P0": {
+    "attack_sent": 868,
+    "legit_sent": 58780,
+    "attack_dropped_pct": 45.6221198156682,
+    "legit_dropped_pct": 49.41816944538959,
+    "legit_sources": 220,
+    "legit_sources_hit": 15
+   },
+   "P4": {
+    "attack_sent": 868,
+    "legit_sent": 58780,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 47.444709084722696,
+    "legit_sources": 220,
+    "legit_sources_hit": 8
+   },
+   "P4cic": {
+    "attack_sent": 868,
+    "legit_sent": 58780,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 45.53249404559374,
+    "legit_sources": 220,
+    "legit_sources_hit": 7
+   },
+   "P4L3": {
+    "attack_sent": 868,
+    "legit_sent": 58780,
+    "attack_dropped_pct": 0.0,
+    "legit_dropped_pct": 43.300442327322216,
+    "legit_sources": 220,
+    "legit_sources_hit": 5
+   }
+  },
+  "all_runs": {
+   "P0": {
+    "attack_sent": 25579916,
+    "legit_sent": 100507,
+    "attack_dropped_pct": 99.84327157290117,
+    "legit_dropped_pct": 41.73739142547285,
+    "legit_sources": 639,
+    "legit_sources_hit": 150,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 1.0
+   },
+   "P4": {
+    "attack_sent": 25579916,
+    "legit_sent": 100507,
+    "attack_dropped_pct": 99.81382268808076,
+    "legit_dropped_pct": 30.772980986398956,
+    "legit_sources": 639,
+    "legit_sources_hit": 37,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   },
+   "P4cic": {
+    "attack_sent": 25579916,
+    "legit_sent": 100507,
+    "attack_dropped_pct": 99.79772803006858,
+    "legit_dropped_pct": 29.586993940720546,
+    "legit_sources": 639,
+    "legit_sources_hit": 37,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   },
+   "P4L3": {
+    "attack_sent": 25579916,
+    "legit_sent": 100507,
+    "attack_dropped_pct": 99.84709097559194,
+    "legit_dropped_pct": 27.07970589113196,
+    "legit_sources": 639,
+    "legit_sources_hit": 30,
+    "mitigation_delay_s_median": 1.0,
+    "mitigation_delay_s_max": 2.0
+   }
+  },
+  "offline_same_windows": {
+   "P0": {
+    "per_run": {
+     "01_NetBIOS": {
+      "attack_drop_pct": 99.93268046708441,
+      "legit_loss_pct": 29.375549692172385,
+      "legit_sources_hit_pct": 21.666666666666668,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "02_LDAP": {
+      "attack_drop_pct": 99.72180262090139,
+      "legit_loss_pct": 16.780772032046613,
+      "legit_sources_hit_pct": 20.535714285714285,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "03_MSSQL": {
+      "attack_drop_pct": 99.99398578179661,
+      "legit_loss_pct": 33.07377049180328,
+      "legit_sources_hit_pct": 31.683168316831683,
+      "median_time_to_mitigate_s": 0.0
+     },
+     "04_UDP": {
+      "attack_drop_pct": 99.99369368178115,
+      "legit_loss_pct": 36.34739099356683,
+      "legit_sources_hit_pct": 34.375,
+      "median_time_to_mitigate_s": 0.0
+     },
+     "05_Syn": {
+      "attack_drop_pct": 99.89978660161891,
+      "legit_loss_pct": 24.960198124889438,
+      "legit_sources_hit_pct": 23.170731707317074,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "q1_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 70.84388073223374,
+      "legit_sources_hit_pct": 7.142857142857143,
+      "median_time_to_mitigate_s": null
+     },
+     "q2_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 19.716719213213494,
+      "legit_sources_hit_pct": 7.377049180327869,
+      "median_time_to_mitigate_s": null
+     }
+    },
+    "mode": null,
+    "attack_runs": {
+     "attack_drop_pct": 99.91456288756329,
+     "legit_loss_pct": 26.64941165192801,
+     "legit_sources_hit_pct": 26.014319809069214
+    },
+    "quiet_runs": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 52.359646138142224,
+     "legit_sources_hit_pct": 7.2727272727272725
+    },
+    "all_runs": {
+     "attack_drop_pct": 99.91117249955003,
+     "legit_loss_pct": 41.685653735560706,
+     "legit_sources_hit_pct": 19.561815336463223
+    }
+   },
+   "P4": {
+    "per_run": {
+     "01_NetBIOS": {
+      "attack_drop_pct": 99.93268046708441,
+      "legit_loss_pct": 4.335971855760775,
+      "legit_sources_hit_pct": 3.3333333333333335,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "02_LDAP": {
+      "attack_drop_pct": 99.72180262090139,
+      "legit_loss_pct": 1.0349599417334348,
+      "legit_sources_hit_pct": 2.6785714285714284,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "03_MSSQL": {
+      "attack_drop_pct": 99.82338574521833,
+      "legit_loss_pct": 13.898360655737704,
+      "legit_sources_hit_pct": 16.831683168316832,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "04_UDP": {
+      "attack_drop_pct": 99.95235556242694,
+      "legit_loss_pct": 3.252323087919943,
+      "legit_sources_hit_pct": 4.6875,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "05_Syn": {
+      "attack_drop_pct": 99.89978660161891,
+      "legit_loss_pct": 3.0957013974880594,
+      "legit_sources_hit_pct": 4.878048780487805,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "q1_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 69.84198886194676,
+      "legit_sources_hit_pct": 2.0408163265306123,
+      "median_time_to_mitigate_s": null
+     },
+     "q2_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 5.524445908427839,
+      "legit_sources_hit_pct": 4.098360655737705,
+      "median_time_to_mitigate_s": null
+     }
+    },
+    "mode": null,
+    "attack_runs": {
+     "attack_drop_pct": 99.86603074516299,
+     "legit_loss_pct": 5.732259687971818,
+     "legit_sources_hit_pct": 6.921241050119332
+    },
+    "quiet_runs": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 46.58897584212317,
+     "legit_sources_hit_pct": 3.1818181818181817
+    },
+    "all_runs": {
+     "attack_drop_pct": 99.86264200398469,
+     "legit_loss_pct": 29.626692668172367,
+     "legit_sources_hit_pct": 5.633802816901408
+    }
+   },
+   "P4cic": {
+    "per_run": {
+     "01_NetBIOS": {
+      "attack_drop_pct": 99.93268046708441,
+      "legit_loss_pct": 4.335971855760775,
+      "legit_sources_hit_pct": 3.3333333333333335,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "02_LDAP": {
+      "attack_drop_pct": 99.72180262090139,
+      "legit_loss_pct": 1.0349599417334348,
+      "legit_sources_hit_pct": 2.6785714285714284,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "03_MSSQL": {
+      "attack_drop_pct": 99.82338574521833,
+      "legit_loss_pct": 13.94426229508197,
+      "legit_sources_hit_pct": 17.821782178217823,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "04_UDP": {
+      "attack_drop_pct": 99.93354808720214,
+      "legit_loss_pct": 3.252323087919943,
+      "legit_sources_hit_pct": 4.6875,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "05_Syn": {
+      "attack_drop_pct": 99.89978660161891,
+      "legit_loss_pct": 3.0957013974880594,
+      "legit_sources_hit_pct": 4.878048780487805,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "q1_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 69.84198886194676,
+      "legit_sources_hit_pct": 2.0408163265306123,
+      "median_time_to_mitigate_s": null
+     },
+     "q2_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 5.524445908427839,
+      "legit_sources_hit_pct": 4.098360655737705,
+      "median_time_to_mitigate_s": null
+     }
+    },
+    "mode": null,
+    "attack_runs": {
+     "attack_drop_pct": 99.86241638078162,
+     "legit_loss_pct": 5.745680254990775,
+     "legit_sources_hit_pct": 7.159904534606206
+    },
+    "quiet_runs": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 46.58897584212317,
+     "legit_sources_hit_pct": 3.1818181818181817
+    },
+    "all_runs": {
+     "attack_drop_pct": 99.85902776224908,
+     "legit_loss_pct": 29.632264419393675,
+     "legit_sources_hit_pct": 5.790297339593114
+    }
+   },
+   "P4L3": {
+    "per_run": {
+     "01_NetBIOS": {
+      "attack_drop_pct": 99.93268046708441,
+      "legit_loss_pct": 2.5769569041336857,
+      "legit_sources_hit_pct": 3.3333333333333335,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "02_LDAP": {
+      "attack_drop_pct": 99.72180262090139,
+      "legit_loss_pct": 1.0349599417334348,
+      "legit_sources_hit_pct": 2.6785714285714284,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "03_MSSQL": {
+      "attack_drop_pct": 99.82338574521833,
+      "legit_loss_pct": 9.280327868852462,
+      "legit_sources_hit_pct": 17.821782178217823,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "04_UDP": {
+      "attack_drop_pct": 99.94971219794516,
+      "legit_loss_pct": 3.18084345961401,
+      "legit_sources_hit_pct": 4.6875,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "05_Syn": {
+      "attack_drop_pct": 99.89978660161891,
+      "legit_loss_pct": 2.9895630638598973,
+      "legit_sources_hit_pct": 4.878048780487805,
+      "median_time_to_mitigate_s": 1.0
+     },
+     "q1_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 36.49444429641078,
+      "legit_sources_hit_pct": 2.0408163265306123,
+      "median_time_to_mitigate_s": null
+     },
+     "q2_no-attack": {
+      "attack_drop_pct": 0.0,
+      "legit_loss_pct": 5.2326949320031995,
+      "legit_sources_hit_pct": 4.098360655737705,
+      "median_time_to_mitigate_s": null
+     }
+    },
+    "mode": "allow",
+    "attack_runs": {
+     "attack_drop_pct": 99.86552275127674,
+     "legit_loss_pct": 4.166367100438567,
+     "legit_sources_hit_pct": 7.159904534606206
+    },
+    "quiet_runs": {
+     "attack_drop_pct": 0.0,
+     "legit_loss_pct": 25.19224225927186,
+     "legit_sources_hit_pct": 3.1818181818181817
+    },
+    "all_runs": {
+     "attack_drop_pct": 99.86213402733614,
+     "legit_loss_pct": 16.463032425602197,
+     "legit_sources_hit_pct": 5.790297339593114
+    }
+   }
+  }
+ }
+}

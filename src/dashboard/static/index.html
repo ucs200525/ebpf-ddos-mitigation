@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDoS Shield Dashboard</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --series-in: #2a78d6;       /* categorical slot 1: incoming */
+  --series-drop: #eb6834;     /* categorical slot 2: dropped */
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --warning: #fab219;
+  --critical: #d03b3b;
+  --critical-tint: rgba(208, 59, 59, 0.10);
+  --good-tint: rgba(12, 163, 12, 0.08);
+  --warning-tint: rgba(250, 178, 25, 0.14);
+  --btn: #ffffff;
+  --btn-hover: #f1f0ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+    --series-in: #3987e5; --series-drop: #d95926; --good-ink: #0ca30c;
+    --critical-tint: rgba(208, 59, 59, 0.18); --good-tint: rgba(12, 163, 12, 0.12);
+    --warning-tint: rgba(250, 178, 25, 0.14); --btn: #232322; --btn-hover: #2c2c2a;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+  --series-in: #3987e5; --series-drop: #d95926; --good-ink: #0ca30c;
+  --critical-tint: rgba(208, 59, 59, 0.18); --good-tint: rgba(12, 163, 12, 0.12);
+  --warning-tint: rgba(250, 178, 25, 0.14); --btn: #232322; --btn-hover: #2c2c2a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--page); color: var(--ink);
+  font: 15px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+.wrap { max-width: 1320px; margin: 0 auto; padding: 18px 16px 32px; }
+header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+header h1 { font-size: 22px; font-weight: 650; }
+header .sub { color: var(--ink-2); font-size: 14px; }
+header .right { margin-left: auto; display: flex; gap: 10px; align-items: center; color: var(--ink-2); font-size: 14px; }
+.chip { border: 1px solid var(--border); background: var(--surface); border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.card h2 { font-size: 15px; font-weight: 650; margin-bottom: 10px; }
+.card h2 small { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; }
+
+/* Status banner */
+#banner { display: flex; gap: 18px; align-items: center; padding: 18px 22px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 14px; }
+#banner .icon { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; font-weight: 700; color: #fff; flex: none; }
+#banner .state { font-size: 28px; font-weight: 700; letter-spacing: 0.3px; }
+#banner .why { color: var(--ink-2); font-size: 16px; margin-top: 2px; }
+#banner.normal { background: var(--good-tint); } #banner.normal .icon { background: var(--good); }
+#banner.attack { background: var(--critical-tint); } #banner.attack .icon { background: var(--critical); }
+#banner.learning { background: var(--warning-tint); } #banner.learning .icon { background: var(--warning); color: #0b0b0b; }
+#banner.idle { background: var(--surface); } #banner.idle .icon { background: var(--muted); }
+
+/* Demo controls */
+#demo { margin-bottom: 14px; }
+#demo .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#demo button { font: inherit; font-size: 14px; border: 1px solid var(--border); background: var(--btn); color: var(--ink); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+#demo button:hover { background: var(--btn-hover); }
+#demo button.primary { background: var(--series-in); color: #fff; border-color: transparent; font-weight: 600; }
+#demo button.active { outline: 2px solid var(--series-in); outline-offset: 1px; }
+#demo .sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 4px; }
+#nowPlaying { margin-top: 10px; color: var(--ink-2); font-size: 14px; min-height: 20px; }
+#nowPlaying b { color: var(--ink); }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+.kpi .label { color: var(--ink-2); font-size: 13px; font-weight: 600; }
+.kpi .value { font-size: 34px; font-weight: 700; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi .value small { font-size: 15px; font-weight: 500; color: var(--ink-2); margin-left: 4px; }
+.kpi .note { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+.kpi .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+
+/* Chart */
+#chartCard { margin-bottom: 14px; }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; color: var(--ink-2); font-size: 13px; margin-bottom: 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; }
+.legend i.dash { height: 0; border-top: 2px dashed var(--muted); }
+.legend i.band { height: 12px; width: 14px; background: var(--critical-tint); border: 1px solid var(--critical); }
+#chart { position: relative; height: 260px; }
+#chart svg { width: 100%; height: 100%; display: block; }
+#tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,0.10); display: none; white-space: nowrap; }
+#tip b { font-variant-numeric: tabular-nums; }
+
+/* Two-column sections */
+.cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-bottom: 14px; }
+.steps { list-style: none; display: grid; gap: 10px; }
+.steps > li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+.steps .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; background: var(--btn-hover); color: var(--ink-2); }
+.steps .t { font-weight: 600; }
+.steps .d { color: var(--ink-2); font-size: 14px; }
+.steps ul { margin: 4px 0 0 18px; color: var(--ink-2); font-size: 13.5px; }
+.steps > li.hit .n { background: var(--critical); color: #fff; }
+.steps > li.ok .n { background: var(--good); color: #fff; }
+.meter { height: 8px; background: var(--grid); border-radius: 4px; overflow: hidden; margin-top: 6px; max-width: 320px; }
+.meter > div { height: 100%; background: var(--ink-2); border-radius: 4px; }
+
+#events { list-style: none; max-height: 300px; overflow: auto; }
+#events li { display: grid; grid-template-columns: 72px 22px 1fr; gap: 6px; padding: 7px 0; border-bottom: 1px solid var(--grid); font-size: 14px; }
+#events li:last-child { border-bottom: 0; }
+#events .time { color: var(--muted); font-variant-numeric: tabular-nums; }
+#events .k { font-weight: 700; text-align: center; }
+#events .attack .k { color: var(--critical); } #events .clear .k { color: var(--good-ink); } #events .block .k { color: var(--series-drop); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; color: var(--muted); font-weight: 600; font-size: 12.5px; padding: 4px 6px; border-bottom: 1px solid var(--grid); }
+td { padding: 6px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+td.num, th.num { text-align: right; }
+.share { height: 6px; background: var(--series-in); border-radius: 3px; min-width: 2px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; }
+.badge.blocked { background: var(--critical-tint); color: var(--critical); }
+.badge.allowed { background: var(--good-tint); color: var(--good-ink); }
+.badge.slowed { background: var(--warning-tint); color: var(--ink); }
+#policyRow { margin-top: 10px; }
+#policyRow .lbl { color: var(--ink-2); font-size: 14px; margin-right: 4px; }
+#outcome { margin-top: 8px; font-size: 14px; color: var(--ink-2); min-height: 20px; }
+#outcome b { color: var(--ink); }
+
+.mix { display: flex; height: 26px; border-radius: 6px; overflow: hidden; gap: 2px; margin: 8px 0; }
+.mix div { height: 100%; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 14px; margin-top: 12px; }
+.facts dt { color: var(--ink-2); } .facts dd { font-variant-numeric: tabular-nums; }
+.empty { color: var(--muted); font-size: 14px; padding: 6px 0; }
+footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .cols { grid-template-columns: 1fr; }
+  #banner .state { font-size: 22px; }
+}
+@media (max-width: 480px) { .kpis { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>DDoS Shield</h1>
+      <div class="sub">Kernel-level filtering with eBPF/XDP + hybrid rule/ML detection</div>
+    </div>
+    <div class="right">
+      <span class="chip" id="mode">Connecting...</span>
+      <span id="clock"></span>
+    </div>
+  </header>
+
+  <section id="banner" class="idle" aria-live="polite">
+    <div class="icon" id="bannerIcon">…</div>
+    <div>
+      <div class="state" id="bannerState">Waiting for traffic</div>
+      <div class="why" id="bannerWhy">Start a demo scenario below, or send traffic to the monitored interface.</div>
+    </div>
+  </section>
+
+  <section id="demo" class="card" hidden>
+    <h2>Demonstration <small>scripted traffic sent through the real detector, one interval per second</small></h2>
+    <div class="row" id="demoButtons">
+      <button class="primary" data-play="tour">▶ Guided tour (about 2 min)</button>
+      <span class="sep"></span>
+    </div>
+    <div id="nowPlaying"></div>
+    <div class="row" id="policyRow">
+      <span class="lbl">Mitigation policy:</span>
+      <button data-policy="p4" title="Scores each source: blocks confident attackers for 30 s, slows uncertain ones, limits brand-new sources in spoofed floods">P4 source scoring (ours)</button>
+      <button data-policy="top5" title="The original rule: permanently block the 5 busiest sources of each attack second">Top-5 blacklist (original)</button>
+      <span class="lbl">Switching resets the demo, so both policies can be compared on the same scenario.</span>
+    </div>
+    <div id="outcome"></div>
+  </section>
+
+  <section class="kpis">
+    <div class="card kpi">
+      <div class="label"><span class="swatch" style="background:var(--series-in)"></span>Incoming traffic</div>
+      <div class="value" id="kIn">0<small>packets/s</small></div>
+      <div class="note" id="kInNote">Normal level: learning…</div>
+    </div>
+    <div class="card kpi">
+      <div class="label"><span class="swatch" style="background:var(--series-drop)"></span>Dropped in the kernel (XDP)</div>
+      <div class="value" id="kDrop">0<small>packets/s</small></div>
+      <div class="note" id="kDropNote">0% of incoming traffic</div>
+    </div>
+    <div class="card kpi">
+      <div class="label">Blocked / slowed sources</div>
+      <div class="value" id="kBlocked">0</div>
+      <div class="note" id="kBlockedNote">No address blocked</div>
+    </div>
+    <div class="card kpi">
+      <div class="label">Detector verdict (this second)</div>
+      <div class="value" id="kVerdict">—</div>
+      <div class="note" id="kVerdictNote">Rules + Random Forest</div>
+    </div>
+  </section>
+
+  <section class="card" id="chartCard">
+    <h2>Traffic over the last 2 minutes</h2>
+    <div class="legend">
+      <span><i style="background:var(--series-in)"></i>Incoming packets/s</span>
+      <span><i style="background:var(--series-drop)"></i>Dropped by XDP</span>
+      <span><i class="dash"></i>Learned normal level</span>
+      <span><i class="band"></i>Attack detected</span>
+    </div>
+    <div id="chart"><svg id="svg" role="img" aria-label="Packets per second over time"></svg><div id="tip"></div></div>
+  </section>
+
+  <div class="cols">
+    <section class="card">
+      <h2>How this second was decided</h2>
+      <ol class="steps" id="steps">
+        <li id="s1"><div class="n">1</div><div><div class="t">XDP counts every packet in the kernel</div><div class="d" id="s1d">—</div></div></li>
+        <li id="s2"><div class="n">2</div><div><div class="t">Rule checks</div><div class="d" id="s2d">—</div><div class="meter"><div id="s2m" style="width:0"></div></div><ul id="s2r"></ul></div></li>
+        <li id="s3"><div class="n">3</div><div><div class="t">Machine-learning model (Random Forest, 10-second window)</div><div class="d" id="s3d">—</div></div></li>
+        <li id="s4"><div class="n">4</div><div><div class="t">Decision</div><div class="d" id="s4d">—</div></div></li>
+      </ol>
+    </section>
+    <section class="card">
+      <h2>What happened</h2>
+      <ul id="events"><li class="empty">No events yet.</li></ul>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <h2>Busiest sources this second</h2>
+      <table>
+        <thead><tr><th>Source address</th><th class="num">Packets</th><th style="width:30%">Share</th><th>Status</th></tr></thead>
+        <tbody id="sources"><tr><td colspan="4" class="empty">No traffic yet.</td></tr></tbody>
+      </table>
+    </section>
+    <section class="card">
+      <h2>Traffic type this second</h2>
+      <div class="mix" id="mix"></div>
+      <div class="legend" id="mixLegend"></div>
+      <dl class="facts" id="facts"></dl>
+    </section>
+  </div>
+  <footer>Capstone project, VIT-AP University · refreshes every second</footer>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n || 0).toLocaleString();
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const hhmmss = t => new Date(t * 1000).toLocaleTimeString([], {hour12: false});
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+let last = null, prevStats = null, mixNow = null;
+
+// ---------- demo controls ----------
+let demoBuilt = false;
+function buildDemo(demo) {
+  if (demoBuilt || !demo) return;
+  demoBuilt = true;
+  $('demo').hidden = false;
+  const row = $('demoButtons');
+  demo.scenarios.forEach(s => {
+    const b = el('button', null, s.title); b.dataset.play = s.id; b.title = s.explain; row.appendChild(b);
+  });
+  row.appendChild(el('span', 'sep'));
+  const stop = el('button', null, '■ Stop'); stop.dataset.action = 'stop'; row.appendChild(stop);
+  const reset = el('button', null, '↺ Reset'); reset.dataset.action = 'reset'; reset.title = 'Clear blocks, alerts and the chart'; row.appendChild(reset);
+  row.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    const body = b.dataset.play ? {action: 'play', scenario: b.dataset.play} : {action: b.dataset.action};
+    fetch('/api/demo', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
+      .then(fetchData);
+  });
+  $('policyRow').addEventListener('click', ev => {
+    const b = ev.target.closest('button[data-policy]'); if (!b) return;
+    fetch('/api/demo', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({action: 'policy', policy: b.dataset.policy})}).then(fetchData);
+  });
+}
+function renderDemo(demo) {
+  if (!demo) return;
+  buildDemo(demo);
+  document.querySelectorAll('#demoButtons button[data-play]').forEach(b => {
+    b.classList.toggle('active', demo.tour ? b.dataset.play === 'tour' : b.dataset.play === demo.scenario);
+  });
+  document.querySelectorAll('#policyRow button').forEach(b => b.classList.toggle('active', b.dataset.policy === demo.policy));
+  const oc = $('outcome'); clear(oc);
+  if (demo.attack_drop_pct || demo.legit_loss_pct) {
+    oc.appendChild(document.createTextNode('Since the last reset: '));
+    oc.appendChild(el('b', null, `${demo.attack_drop_pct.toFixed(1)}% of attack traffic dropped`));
+    oc.appendChild(document.createTextNode(' · '));
+    oc.appendChild(el('b', null, `${demo.legit_loss_pct.toFixed(1)}% of real users' traffic lost`));
+    oc.appendChild(document.createTextNode(' (collateral damage)'));
+  }
+  const np = $('nowPlaying'); clear(np);
+  if (!demo.running) { np.textContent = 'Nothing playing. Choose the guided tour or a single scenario.'; return; }
+  np.appendChild(document.createTextNode('Now playing: '));
+  np.appendChild(el('b', null, demo.title));
+  np.appendChild(document.createTextNode(' — ' + demo.explain));
+  if (demo.seconds_left) np.appendChild(document.createTextNode(` · ${demo.seconds_left} s left`));
+  if (demo.next && demo.next.length && demo.seconds_left) np.appendChild(document.createTextNode(' · next: ' + demo.next[0]));
+}
+
+// ---------- banner + KPIs ----------
+function renderBanner(s) {
+  const b = $('banner'), d = s.last_detection, demo = s.demo;
+  const learning = (s.baseline.samples || 0) < 10;
+  let cls = 'idle', icon = '…', state = 'Waiting for traffic', why = 'Start a demo scenario below, or send traffic to the monitored interface.';
+  if (d && d.is_anomaly) {
+    cls = 'attack'; icon = '!'; state = 'UNDER ATTACK';
+    const kind = d.attack_type && !['UNKNOWN', 'BENIGN'].includes(d.attack_type) ? d.attack_type.replace(/_/g, ' ') : 'DDoS traffic';
+    why = `${kind} at ${fmt(s.current_pps)} packets/s (normal ≈ ${fmt(s.baseline.mean_pps)}). ` +
+          `${fmt(s.blacklist.length)} source${s.blacklist.length === 1 ? '' : 's'} blocked in the kernel so far.`;
+  } else if (s.timeline.length && learning) {
+    cls = 'learning'; icon = '~'; state = 'Learning normal traffic';
+    why = `Watching normal traffic to learn its level (${s.baseline.samples}/10 seconds). Deviation rules start after that.`;
+  } else if (s.timeline.length) {
+    cls = 'normal'; icon = '✓'; state = 'ALL NORMAL';
+    why = `${fmt(s.current_pps)} packets/s, close to the learned normal level of ${fmt(s.baseline.mean_pps)}.`;
+    if (demo && demo.scenario === 'flash_crowd') why = 'Legitimate surge: more traffic, but it looks like real users, so nothing is blocked.';
+    else if (s.current_drop_pps > 0) why += ` Still dropping ${fmt(s.current_drop_pps)} packets/s from sources blocked earlier.`;
+  }
+  b.className = cls; $('bannerIcon').textContent = icon; $('bannerState').textContent = state; $('bannerWhy').textContent = why;
+}
+
+function renderKpis(s) {
+  const inP = s.current_pps || 0, dropP = s.current_drop_pps || 0;
+  $('kIn').firstChild.textContent = fmt(inP);
+  $('kInNote').textContent = s.baseline.samples >= 10 ? `Learned normal level: ${fmt(s.baseline.mean_pps)} packets/s` : 'Learning the normal level…';
+  $('kDrop').firstChild.textContent = fmt(dropP);
+  $('kDropNote').textContent = `${inP > 0 ? Math.round(100 * dropP / inP) : 0}% of incoming traffic`;
+  const m = s.mitigation || {blocked: s.blacklist.length, limited: 0, policy: 'top5'};
+  $('kBlocked').textContent = m.limited ? `${fmt(m.blocked)} / ${fmt(m.limited)}` : fmt(m.blocked);
+  const demo = s.demo;
+  if (demo && (m.blocked || m.limited)) {
+    $('kBlockedNote').textContent = `Blocked: ${demo.blocked_bots} attackers, ${demo.blocked_legit} real users · ` +
+      `slowed: ${demo.limited_bots} attackers, ${demo.limited_legit} real users`;
+  } else if (m.blocked || m.limited) {
+    $('kBlockedNote').textContent = m.policy === 'p4' ? `${m.title}: blocks expire after 30 s` +
+      (m.spoof_guard ? ' · spoofing guard on' : '') : 'Blocked by the top-5 rule during attacks';
+  } else {
+    $('kBlockedNote').textContent = 'No address blocked';
+  }
+  const d = s.last_detection;
+  if (!d) { $('kVerdict').textContent = '—'; $('kVerdictNote').textContent = 'Rules + Random Forest'; return; }
+  $('kVerdict').textContent = d.is_anomaly ? 'Attack' : 'Normal';
+  $('kVerdict').style.color = d.is_anomaly ? 'var(--critical)' : 'var(--good-ink)';
+  $('kVerdictNote').textContent = `Rule score ${Math.round(d.score)}/100 · decided by ${d.source === 'ml' ? 'ML model' : d.source === 'hybrid' ? 'rules + ML' : 'rules'}`;
+}
+
+// ---------- decision explanation ----------
+function renderSteps(s) {
+  const d = s.last_detection;
+  ['s1', 's2', 's3', 's4'].forEach(id => $(id).className = '');
+  if (!d) return;
+  $('s1').className = 'ok';
+  $('s1d').textContent = `${fmt(s.current_pps)} packets/s counted per source; ${fmt(s.current_drop_pps)} packets/s from blocked sources dropped at the driver.`;
+  const ruleScore = Math.min(100, d.reasons.filter(r => !r.startsWith('ML ')).length ? Math.round(ruleOnlyScore(d)) : 0);
+  $('s2').className = ruleScore >= 50 ? 'hit' : 'ok';
+  $('s2d').textContent = ruleScore >= 50 ? `Suspicious: ${ruleScore}/100 (50 or more is suspicious)` : `Looks normal: ${ruleScore}/100 (50 or more is suspicious)`;
+  $('s2m').style.width = ruleScore + '%';
+  $('s2m').style.background = ruleScore >= 50 ? 'var(--critical)' : 'var(--good)';
+  const ul = $('s2r'); clear(ul);
+  d.reasons.filter(r => !r.startsWith('ML ')).slice(0, 5).forEach(r => ul.appendChild(el('li', null, r)));
+  if (d.ml_prediction === null || d.ml_prediction === undefined) {
+    $('s3d').textContent = s.ml_enabled ? 'Collecting a few seconds of history first.' : 'ML model not loaded; rules only.';
+  } else {
+    $('s3').className = d.ml_prediction ? 'hit' : 'ok';
+    $('s3d').textContent = d.ml_prediction
+      ? `Attack pattern recognised (${Math.round(d.ml_confidence)}% confident)`
+      : `Looks like normal traffic (${Math.round(d.ml_confidence)}% confident)`;
+  }
+  $('s4').className = d.is_anomaly ? 'hit' : 'ok';
+  let why;
+  const act = (s.mitigation && s.mitigation.policy === 'p4')
+      ? 'P4 scores every source: confident attackers are blocked in XDP for 30 s, uncertain ones are slowed down.'
+      : 'The 5 busiest new sources are blocked in XDP (top-5 rule).';
+  if (d.is_anomaly) why = (d.source === 'statistical'
+      ? 'ATTACK: the rule score is very high (90+), so it counts even without the ML model. '
+      : 'ATTACK: confirmed by the ML model. ') + act;
+  else if (ruleScore >= 50) why = 'NORMAL: the rules saw a surge, but the ML model recognises it as legitimate (for example a flash crowd), so nothing is blocked.';
+  else why = 'NORMAL: this second is used to keep learning the normal traffic level.';
+  $('s4d').textContent = why;
+}
+// The combined score adds an ML bonus; recover the rule-only part for display
+function ruleOnlyScore(d) {
+  const pts = {'Very high packet rate': 50, 'High packet rate': 25, 'Packet rate deviation': 30, 'Rapid traffic increase': 20,
+               'Abnormal TCP ratio': 15, 'High UDP ratio': 15, 'High ICMP ratio': 15, 'Low source IP entropy': 20,
+               'Traffic concentrated': 10, 'Detected': 25};
+  let total = 0;
+  d.reasons.forEach(r => { for (const k in pts) if (r.startsWith(k)) { total += pts[k]; break; } });
+  return total;
+}
+
+// ---------- events ----------
+function renderEvents(s) {
+  const ul = $('events'); clear(ul);
+  if (!s.events.length) { ul.appendChild(el('li', 'empty', 'No events yet.')); return; }
+  const icon = {attack: '!', clear: '✓', block: '⛔'};
+  s.events.slice(0, 30).forEach(e => {
+    const li = el('li', e.kind);
+    li.appendChild(el('span', 'time', hhmmss(e.t)));
+    li.appendChild(el('span', 'k', icon[e.kind] || '•'));
+    li.appendChild(el('span', null, e.text));
+    ul.appendChild(li);
+  });
+}
+
+// ---------- sources + mix ----------
+function renderSources(s) {
+  const tb = $('sources'); clear(tb);
+  const rows = s.ip_stats.slice(0, 8);
+  if (!rows.length) { const tr = el('tr'); const td = el('td', 'empty', 'No traffic yet.'); td.colSpan = 4; tr.appendChild(td); tb.appendChild(tr); return; }
+  const total = s.ip_stats.reduce((a, r) => a + (r.packets || 0), 0) || 1;
+  const max = Math.max(...rows.map(r => r.packets || 0)) || 1;
+  rows.forEach(r => {
+    const tr = el('tr');
+    tr.appendChild(el('td', null, r.ip));
+    tr.appendChild(el('td', 'num', fmt(r.packets)));
+    const td = el('td'); const bar = el('div', 'share'); bar.style.width = (100 * r.packets / max) + '%';
+    bar.title = `${(100 * r.packets / total).toFixed(1)}% of the top sources`; td.appendChild(bar); tr.appendChild(td);
+    const state = r.blocked ? ['blocked', 'Blocked'] : r.limited ? ['slowed', 'Slowed'] : ['allowed', 'Allowed'];
+    const st = el('td'); st.appendChild(el('span', 'badge ' + state[0], state[1])); tr.appendChild(st);
+    tb.appendChild(tr);
+  });
+}
+function renderMix(s) {
+  const st = s.statistics || {};
+  if (prevStats && st.total_packets > prevStats.total_packets) {
+    const d = k => Math.max(0, (st[k] || 0) - (prevStats[k] || 0));
+    mixNow = {TCP: d('tcp_packets'), UDP: d('udp_packets'), ICMP: d('icmp_packets')};
+  }
+  if (st.total_packets !== undefined) prevStats = st;
+  const mix = $('mix'), lg = $('mixLegend'); clear(mix); clear(lg);
+  const colors = {TCP: css('--series-in'), UDP: css('--series-drop'), ICMP: '#1baf7a'};
+  if (mixNow) {
+    const tot = Object.values(mixNow).reduce((a, b) => a + b, 0) || 1;
+    Object.entries(mixNow).forEach(([k, v]) => {
+      if (v > 0) { const div = el('div'); div.style.width = (100 * v / tot) + '%'; div.style.background = colors[k]; div.title = `${k}: ${(100 * v / tot).toFixed(0)}%`; mix.appendChild(div); }
+      const sp = el('span'); const i = el('i'); i.style.background = colors[k]; i.style.height = '10px'; i.style.width = '10px';
+      sp.appendChild(i); sp.appendChild(document.createTextNode(`${k} ${(100 * v / tot).toFixed(0)}%`)); lg.appendChild(sp);
+    });
+  }
+  const f = $('facts'); clear(f);
+  const ml = s.ml_stats || {};
+  const facts = [
+    ['Mode', s.simulation_mode ? 'Simulation (no kernel; same detection code)' : `Live XDP on ${s.interface}`],
+    ['Normal level learned', s.baseline.samples >= 10 ? `${fmt(s.baseline.mean_pps)} packets/s from ${fmt(s.baseline.samples)} normal seconds` : 'still learning'],
+    ['ML model', s.ml_enabled ? `Random Forest, test accuracy ${ml.model_accuracy ? (100 * ml.model_accuracy).toFixed(1) + '%' : '—'}` : 'not loaded'],
+    ['ML decision time', ml.avg_inference_ms ? `${ml.avg_inference_ms.toFixed(1)} ms` : '—'],
+  ];
+  facts.forEach(([k, v]) => { f.appendChild(el('dt', null, k)); f.appendChild(el('dd', null, v)); });
+}
+
+// ---------- chart ----------
+const SPAN = 120;
+function renderChart(s) {
+  const svg = $('svg'), box = $('chart').getBoundingClientRect();
+  const W = Math.max(300, box.width), H = box.height, m = {l: 56, r: 14, t: 10, b: 26};
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  clear(svg);
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+  const pts = s.timeline;
+  const now = pts.length ? pts[pts.length - 1].t : Date.now() / 1000;
+  const t0 = now - SPAN;
+  const vis = pts.filter(p => p.t >= t0);
+  const maxV = Math.max(10, ...vis.map(p => Math.max(p.pps, p.baseline_pps)));
+  const step = niceStep(maxV / 4), yMax = Math.ceil(maxV / step) * step;
+  const x = t => m.l + (W - m.l - m.r) * (t - t0) / SPAN;
+  const y = v => H - m.b - (H - m.t - m.b) * v / yMax;
+  for (let v = 0; v <= yMax + 1e-9; v += step) {
+    mk('line', {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: v === 0 ? css('--axis') : css('--grid'), 'stroke-width': 1});
+    const tx = mk('text', {x: m.l - 8, y: y(v) + 4, 'text-anchor': 'end', 'font-size': 12, fill: css('--muted')}); tx.textContent = fmt(v);
+  }
+  [120, 90, 60, 30, 0].forEach(a => {
+    const tx = mk('text', {x: x(now - a), y: H - 6, 'text-anchor': a === 120 ? 'start' : a === 0 ? 'end' : 'middle', 'font-size': 12, fill: css('--muted')});
+    tx.textContent = a === 0 ? 'now' : `${a}s ago`;
+  });
+  // attack bands (one rect per run of anomalous seconds)
+  let runStart = null;
+  vis.forEach((p, i) => {
+    const prevT = i ? vis[i - 1].t : p.t - 1;
+    if (p.anomaly && runStart === null) runStart = prevT;
+    const endRun = runStart !== null && (!p.anomaly || i === vis.length - 1);
+    if (endRun) {
+      const end = p.anomaly ? p.t : prevT;
+      mk('rect', {x: x(Math.max(t0, runStart)), y: m.t, width: Math.max(2, x(end) - x(Math.max(t0, runStart))), height: H - m.t - m.b, fill: css('--critical-tint')});
+      runStart = null;
+    }
+  });
+  if (!vis.length) {
+    const tx = mk('text', {x: W / 2, y: H / 2, 'text-anchor': 'middle', 'font-size': 14, fill: css('--muted')}); tx.textContent = 'No traffic yet';
+    return;
+  }
+  const path = key => vis.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p[key]).toFixed(1)}`).join('');
+  const learned = vis.filter(p => p.baseline_pps > 0);
+  if (learned.length > 1) mk('path', {d: learned.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p.baseline_pps).toFixed(1)}`).join(''), fill: 'none', stroke: css('--muted'), 'stroke-width': 1.5, 'stroke-dasharray': '5 4'});
+  const area = path('dropped_pps') + `L${x(vis[vis.length - 1].t).toFixed(1)},${y(0)}L${x(vis[0].t).toFixed(1)},${y(0)}Z`;
+  mk('path', {d: area, fill: css('--series-drop'), 'fill-opacity': 0.18, stroke: 'none'});
+  mk('path', {d: path('dropped_pps'), fill: 'none', stroke: css('--series-drop'), 'stroke-width': 2, 'stroke-linejoin': 'round'});
+  mk('path', {d: path('pps'), fill: 'none', stroke: css('--series-in'), 'stroke-width': 2, 'stroke-linejoin': 'round'});
+  const lp = vis[vis.length - 1];
+  mk('circle', {cx: x(lp.t), cy: y(lp.pps), r: 4, fill: css('--series-in'), stroke: css('--surface'), 'stroke-width': 2});
+  // hover layer
+  const cross = mk('line', {y1: m.t, y2: H - m.b, stroke: css('--axis'), 'stroke-width': 1, visibility: 'hidden'});
+  const hit = mk('rect', {x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: 'transparent'});
+  const tip = $('tip');
+  hit.addEventListener('mousemove', ev => {
+    const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * W / r.width;
+    const t = t0 + (px - m.l) / (W - m.l - m.r) * SPAN;
+    let best = vis[0]; vis.forEach(p => { if (Math.abs(p.t - t) < Math.abs(best.t - t)) best = p; });
+    cross.setAttribute('x1', x(best.t)); cross.setAttribute('x2', x(best.t)); cross.setAttribute('visibility', 'visible');
+    clear(tip);
+    tip.appendChild(el('div', null, hhmmss(best.t) + (best.anomaly ? ' · attack detected' : '')));
+    [['Incoming', best.pps], ['Dropped', best.dropped_pps], ['Normal level', best.baseline_pps]].forEach(([k, v]) => {
+      const row = el('div'); row.appendChild(document.createTextNode(k + ': ')); row.appendChild(el('b', null, fmt(v) + ' /s')); tip.appendChild(row);
+    });
+    tip.style.display = 'block';
+    const tx = x(best.t) * r.width / W; tip.style.left = Math.min(r.width - tip.offsetWidth - 4, tx + 12) + 'px'; tip.style.top = '12px';
+  });
+  hit.addEventListener('mouseleave', () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); });
+}
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p;
+}
+
+// ---------- main loop ----------
+async function fetchData() {
+  try {
+    const res = await fetch('/api/status', {cache: 'no-store'});
+    if (!res.ok) throw new Error(res.status);
+    const s = await res.json();
+    last = s;
+    $('mode').textContent = s.simulation_mode ? 'Simulation mode' : `Live XDP · ${s.interface}`;
+    renderDemo(s.demo); renderBanner(s); renderKpis(s); renderSteps(s); renderEvents(s); renderSources(s); renderMix(s); renderChart(s);
+  } catch (e) {
+    $('mode').textContent = 'Disconnected';
+  }
+}
+setInterval(fetchData, 1000);
+setInterval(() => { $('clock').textContent = new Date().toLocaleTimeString([], {hour12: false}); }, 1000);
+window.addEventListener('resize', () => last && renderChart(last));
+fetchData();
+</script>
+</body>
+</html>

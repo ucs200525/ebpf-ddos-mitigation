@@ -1,0 +1,204 @@
+{
+ "what": "scripts/live_xdp_demo.sh on Kali Linux (WSL2) as root: veth pair, attacker in its own network namespace, 40 s of pings, then a 2,000 packets/s flood (UDP, or TCP SYN for *_syn) from 100 forged addresses for 30 s; system in generic XDP mode. Copied from logs/<run>/live_metrics.json (logs/ is not in git). Two HTTP runs of the same session are left out: the tool cannot hold TCP connections with forged addresses, so they produced no flood (detector flagged 3.4% of seconds).",
+ "runs": {
+  "top5_synthetic": {
+   "setup": {
+    "mode": "generic XDP on a veth pair (attacker in its own network namespace)",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "policy": "top5",
+    "models": "synthetic",
+    "attack": "udp",
+    "attack_pps_requested": 2000,
+    "attack_seconds": 30.9
+   },
+   "xdp": {
+    "run_cnt": 60205,
+    "run_time_ns": 87182664,
+    "ns_per_packet": 1448.0967361514824
+   },
+   "control_plane": {
+    "cpu_pct_mean": 0.47108179596959054,
+    "cpu_pct_mean_during_attack": 0.6413467276246422,
+    "cpu_pct_max": 1.9921497699267032,
+    "rss_mb_max": 346.6875
+   },
+   "detection": {
+    "detection_delay_s": 1.2,
+    "mitigation_delay_s": 15.1,
+    "attack_seconds_flagged_pct": 96.42857142857143,
+    "normal_seconds_flagged_before_attack": 0
+   },
+   "packets": {
+    "total_packets": 60199,
+    "dropped_packets": 33084,
+    "passed_packets": 27115,
+    "attack_packets_sent": 59999,
+    "dropped_over_attack_sent_pct": 55.140919015316925
+   },
+   "note": "timeline covers the last 180 intervals only; dropped_over_attack_sent assumes every dropped packet was an attack packet (the only other traffic is ping)",
+   "log_dir": "logs/live_demo_20261031_153516"
+  },
+  "p4_synthetic": {
+   "setup": {
+    "mode": "generic XDP on a veth pair (attacker in its own network namespace)",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "policy": "p4",
+    "models": "synthetic",
+    "attack": "udp",
+    "attack_pps_requested": 2000,
+    "attack_seconds": 30.9
+   },
+   "xdp": {
+    "run_cnt": 60204,
+    "run_time_ns": 96273279,
+    "ns_per_packet": 1599.117649990034
+   },
+   "control_plane": {
+    "cpu_pct_mean": 0.41898648630217866,
+    "cpu_pct_mean_during_attack": 0.513839713584264,
+    "cpu_pct_max": 3.984135853555149,
+    "rss_mb_max": 355.92578125
+   },
+   "detection": {
+    "detection_delay_s": 1.7,
+    "mitigation_delay_s": 2.8,
+    "attack_seconds_flagged_pct": 96.55172413793103,
+    "normal_seconds_flagged_before_attack": 0
+   },
+   "packets": {
+    "total_packets": 60198,
+    "dropped_packets": 31696,
+    "passed_packets": 28502,
+    "attack_packets_sent": 59998,
+    "dropped_over_attack_sent_pct": 52.82842761425381
+   },
+   "note": "timeline covers the last 180 intervals only; dropped_over_attack_sent assumes every dropped packet was an attack packet (the only other traffic is ping)",
+   "log_dir": "logs/live_demo_20261031_153655"
+  },
+  "p4l3_cic": {
+   "setup": {
+    "mode": "generic XDP on a veth pair (attacker in its own network namespace)",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "policy": "p4",
+    "models": "cic",
+    "attack": "udp",
+    "attack_pps_requested": 2000,
+    "attack_seconds": 30.9
+   },
+   "xdp": {
+    "run_cnt": 60204,
+    "run_time_ns": 98237239,
+    "ns_per_packet": 1631.7394026974953
+   },
+   "control_plane": {
+    "cpu_pct_mean": 0.5624725946715443,
+    "cpu_pct_mean_during_attack": 0.7695488726642787,
+    "cpu_pct_max": 2.9837265660939303,
+    "rss_mb_max": 371.7109375
+   },
+   "detection": {
+    "detection_delay_s": 1.7,
+    "mitigation_delay_s": 2.8,
+    "attack_seconds_flagged_pct": 96.55172413793103,
+    "normal_seconds_flagged_before_attack": 0
+   },
+   "packets": {
+    "total_packets": 60199,
+    "dropped_packets": 53370,
+    "passed_packets": 6829,
+    "attack_packets_sent": 59999,
+    "dropped_over_attack_sent_pct": 88.95148252470875
+   },
+   "note": "timeline covers the last 180 intervals only; dropped_over_attack_sent assumes every dropped packet was an attack packet (the only other traffic is ping)",
+   "log_dir": "logs/live_demo_20261031_153829"
+  },
+  "p4_synthetic_syn": {
+   "setup": {
+    "mode": "generic XDP on a veth pair (attacker in its own network namespace)",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "policy": "p4",
+    "models": "synthetic",
+    "attack": "tcp",
+    "attack_pps_requested": 2000,
+    "attack_seconds": 30.8
+   },
+   "xdp": {
+    "run_cnt": 60205,
+    "run_time_ns": 86103415,
+    "ns_per_packet": 1430.170500788971
+   },
+   "control_plane": {
+    "cpu_pct_mean": 0.7066255476138849,
+    "cpu_pct_mean_during_attack": 1.2189420808465319,
+    "cpu_pct_max": 1.9917950071968207,
+    "rss_mb_max": 355.421875
+   },
+   "detection": {
+    "detection_delay_s": 6.3,
+    "mitigation_delay_s": 7.5,
+    "attack_seconds_flagged_pct": 82.14285714285714,
+    "normal_seconds_flagged_before_attack": 0
+   },
+   "packets": {
+    "total_packets": 60199,
+    "dropped_packets": 45281,
+    "passed_packets": 14918,
+    "attack_packets_sent": 59999,
+    "dropped_over_attack_sent_pct": 75.46959115985267
+   },
+   "note": "timeline covers the last 180 intervals only; dropped_over_attack_sent assumes every dropped packet was an attack packet (the only other traffic is ping)",
+   "log_dir": "logs/live_demo_20261031_154002"
+  },
+  "p4l3_cic_syn": {
+   "setup": {
+    "mode": "generic XDP on a veth pair (attacker in its own network namespace)",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "policy": "p4",
+    "models": "cic",
+    "attack": "tcp",
+    "attack_pps_requested": 2000,
+    "attack_seconds": 30.8
+   },
+   "xdp": {
+    "run_cnt": 60206,
+    "run_time_ns": 93609119,
+    "ns_per_packet": 1554.8137893233234
+   },
+   "control_plane": {
+    "cpu_pct_mean": 0.8505425180487622,
+    "cpu_pct_mean_during_attack": 1.3596172787231533,
+    "cpu_pct_max": 3.97512645866687,
+    "rss_mb_max": 372.61328125
+   },
+   "detection": {
+    "detection_delay_s": 6.1,
+    "mitigation_delay_s": 7.3,
+    "attack_seconds_flagged_pct": 82.14285714285714,
+    "normal_seconds_flagged_before_attack": 0
+   },
+   "packets": {
+    "total_packets": 60199,
+    "dropped_packets": 46076,
+    "passed_packets": 14123,
+    "attack_packets_sent": 59999,
+    "dropped_over_attack_sent_pct": 76.79461324355405
+   },
+   "note": "timeline covers the last 180 intervals only; dropped_over_attack_sent assumes every dropped packet was an attack packet (the only other traffic is ping)",
+   "log_dir": "logs/live_demo_20261031_154134"
+  }
+ },
+ "provenance": {
+  "script": "sudo POLICY=... MODELS=... ATTACK_TYPE=... bash scripts/live_xdp_demo.sh",
+  "parameters": {},
+  "created": "2026-10-31 15:47:27 +0530",
+  "git_commit": "d0a476a566f966dd4cf2daa5325043849f11f139",
+  "git_dirty": true,
+  "code_sha256": "a8bec85ade89b24a37da05a5267bab2b6995e5468adb8e2254b9636c3269f54a",
+  "python": "3.10.6",
+  "numpy": "2.2.6",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu_count": 16,
+  "inputs": {}
+ }
+}
