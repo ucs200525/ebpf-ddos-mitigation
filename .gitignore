@@ -15,8 +15,7 @@ main_pid.txt
 # Local virtual environments
 .venv*/
 
-# AI / IDE tooling
-.claude/
-.vscode/
-.idea/
 
+# Local-only design notes (not part of the reproducible code)
+docs/ARCHITECTURE_AND_LEVELS_GUIDE.md
+docs/diagrams/

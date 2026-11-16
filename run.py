@@ -12,6 +12,8 @@ later runs reinstall only when requirements.txt changes. Then it runs one action
                 ./run.sh dashboard eth0          (asks for the sudo password)
   live        Linux only: full scripted live XDP test on a veth pair (sudo)
   check-xdp   Linux only: compile the XDP program and load it through the kernel verifier (sudo)
+  serve       Windows: like `demo`, but reachable from other devices on the same network
+              (phone / second laptop); prints the addresses to open on each device
   attack      Send the scripted demo attack to a dashboard that is already running
   test        Run the test suite
   verify      Check every number quoted in the paper/report/slides against the result files
@@ -109,12 +111,51 @@ def sudo_prefix() -> list:
     return ['sudo', '-E']
 
 
-def wait_and_open_browser(proc, url: str, timeout: float = 90) -> None:
+def lan_addresses() -> list:
+    """IPv4 addresses other devices on the local network can use to reach this machine"""
+    import socket
+    found = []
+    try:  # the address of the interface that holds the default route (no packet is sent)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('10.255.255.255', 1))
+        found.append(s.getsockname()[0])
+        s.close()
+    except OSError:
+        pass
+    try:
+        found += socket.gethostbyname_ex(socket.gethostname())[2]
+    except OSError:
+        pass
+    seen = []
+    for ip in found:
+        if ip not in seen and not ip.startswith(('127.', '169.254.')):
+            seen.append(ip)
+    return seen
+
+
+def print_lan_urls(port: int = 5000) -> None:
+    ips = lan_addresses()
+    print('', flush=True)
+    print('=' * 64)
+    if not ips:
+        print('  No network address found: connect this laptop to the hotspot first.')
+    else:
+        print(f'  Monitor (phone / projector):  http://{ips[0]}:{port}/')
+        print(f'  Attack console (laptop 2):    http://{ips[0]}:{port}/console')
+        if len(ips) > 1:
+            print(f'  (if that does not open, try the same with: {", ".join(ips[1:])})')
+    print('  Ctrl+C in this window stops the server.')
+    print('=' * 64, flush=True)
+
+
+def wait_and_open_browser(proc, url: str, timeout: float = 90, lan: bool = False) -> None:
     deadline = time.time() + timeout
     while time.time() < deadline and proc.poll() is None:
         try:
             urllib.request.urlopen(url + '/api/status', timeout=2)
-            say(f'Dashboard ready: {url}  (press "Guided tour"; Ctrl+C here stops it)')
+            say(f'Dashboard ready: {url}  (Ctrl+C here stops it)')
+            if lan:
+                print_lan_urls()
             webbrowser.open(url)
             return
         except OSError:
@@ -123,12 +164,12 @@ def wait_and_open_browser(proc, url: str, timeout: float = 90) -> None:
         say(f'Dashboard not answering yet; open {url} yourself')
 
 
-def run_dashboard(py: Path, args: list, root: bool = False) -> int:
+def run_dashboard(py: Path, args: list, root: bool = False, lan: bool = False) -> int:
     cmd = (sudo_prefix() if root else []) + [str(py), 'main.py', *args]
     say(' '.join(cmd))
     proc = subprocess.Popen(cmd, cwd=ROOT)
     try:
-        wait_and_open_browser(proc, DASHBOARD_URL)
+        wait_and_open_browser(proc, DASHBOARD_URL, lan=lan)
         return proc.wait()
     except KeyboardInterrupt:
         say('Stopping...')
@@ -148,7 +189,7 @@ def main() -> int:
         print(__doc__)
         return 0
 
-    actions = ('setup', 'demo', 'dashboard', 'live', 'check-xdp', 'attack', 'test', 'verify', 'reproduce',
+    actions = ('setup', 'demo', 'serve', 'dashboard', 'live', 'check-xdp', 'attack', 'test', 'verify', 'reproduce',
                'figures', 'cic', 'live-cic', 'check-flows')
     if action not in actions:
         print(__doc__)
@@ -186,6 +227,11 @@ def main() -> int:
                 'for a real interface, or `./run.sh live` for the scripted veth test.')
             return 2
         return run_dashboard(py, ['--interface', 'Ethernet', '--dashboard', *rest])
+    if action == 'serve':
+        if IS_LINUX:
+            say('`serve` is for Windows. On Linux use: ./run.sh dashboard <interface> --host 0.0.0.0')
+            return 2
+        return run_dashboard(py, ['--interface', 'Ethernet', '--dashboard', '--host', '0.0.0.0', *rest], lan=True)
     if action == 'dashboard':
         need_linux(action)
         if not rest:

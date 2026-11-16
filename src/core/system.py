@@ -34,7 +34,7 @@ from src.config import (
     DATA_DIR, EBPF_PROGRAM_PATH, MLConfig, MODELS_DIR, MonitoringConfig, PLATFORM,
     DetectionThresholds, TimeWindows,
 )
-from src.core.traffic_monitor import TrafficMonitor, BCC_AVAILABLE
+from src.core.traffic_monitor import TrafficMonitor, BCC_AVAILABLE, validate_blockable_ip
 from src.core.anomaly_detector import AnomalyDetector, MLEnhancedAnomalyDetector, AnomalyScore
 from src.core.traffic_profiler import TrafficProfiler
 from src.core.alert_system import AlertSystem
@@ -85,7 +85,9 @@ class DDoSMitigationSystem:
     
     def __init__(self, interface: str, xdp_mode: str = 'native', ml_model_path: str = None,
                  allow_simulation_api: bool = False, auto_detect_model: bool = True,
-                 policy: str = 'p4', models: str = 'synthetic', flow_check: bool = None):
+                 policy: str = 'p4', models: str = 'synthetic', flow_check: bool = None,
+                 protected_ips=None):
+        self.protected_ips = set(protected_ips or ())
         if models not in MODEL_SETS:
             raise ValueError(f"unknown model set {models!r}; choose from: " + ', '.join(MODEL_SETS))
         self.models = models
@@ -220,7 +222,15 @@ class DDoSMitigationSystem:
                 self.allow_simulation_api = True
             else:
                 logger.info("XDP program loaded successfully")
-            
+
+            # Addresses that must never be blocked (gateway, this host): the demo must
+            # not take the network down, and a blocked gateway would block everything
+            if self.protected_ips:
+                self.traffic_monitor.never_block = {
+                    ip for ip in (validate_blockable_ip(p) for p in self.protected_ips) if ip}
+                self.traffic_monitor.add_known_sources(self.traffic_monitor.never_block)
+                logger.info(f"Protected (never blocked): {', '.join(sorted(self.traffic_monitor.never_block)) or 'none'}")
+
         except Exception as e:
             logger.error(f"Failed to initialize traffic monitor: {e}")
             return False
@@ -367,6 +377,8 @@ class DDoSMitigationSystem:
                 monitor._sim_limits.clear()
                 monitor._sim_known.clear()
                 monitor._sim_guard = None
+            elif monitor:
+                monitor.clear_mitigation()
             if self.p4 is not None:
                 self.p4._reset_index()
             self.alert_system.alert_history.clear()

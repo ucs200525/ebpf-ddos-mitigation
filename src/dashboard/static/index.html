@@ -46,6 +46,7 @@
   --warning-tint: rgba(250, 178, 25, 0.14); --btn: #232322; --btn-hover: #2c2c2a;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 body {
   background: var(--page); color: var(--ink);
   font: 15px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
@@ -167,14 +168,14 @@ footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top:
     <div class="icon" id="bannerIcon">…</div>
     <div>
       <div class="state" id="bannerState">Waiting for traffic</div>
-      <div class="why" id="bannerWhy">Start a demo scenario below, or send traffic to the monitored interface.</div>
+      <div class="why" id="bannerWhy">Monitoring the protected interface. No traffic received yet.</div>
     </div>
   </section>
 
   <section id="demo" class="card" hidden>
-    <h2>Demonstration <small>scripted traffic sent through the real detector, one interval per second</small></h2>
+    <h2>Traffic generator <small>test traffic fed through the detector and mitigation, one interval per second</small></h2>
     <div class="row" id="demoButtons">
-      <button class="primary" data-play="tour">▶ Guided tour (about 2 min)</button>
+      <button class="primary" data-play="tour">▶ Full attack sequence (about 2 min)</button>
       <span class="sep"></span>
     </div>
     <div id="nowPlaying"></div>
@@ -182,7 +183,7 @@ footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top:
       <span class="lbl">Mitigation policy:</span>
       <button data-policy="p4" title="Scores each source: blocks confident attackers for 30 s, slows uncertain ones, limits brand-new sources in spoofed floods">P4 source scoring (ours)</button>
       <button data-policy="top5" title="The original rule: permanently block the 5 busiest sources of each attack second">Top-5 blacklist (original)</button>
-      <span class="lbl">Switching resets the demo, so both policies can be compared on the same scenario.</span>
+      <span class="lbl">Switching clears blocks and counters, so both policies can be compared on the same traffic.</span>
     </div>
     <div id="outcome"></div>
   </section>
@@ -267,11 +268,18 @@ function clear(node) { while (node.firstChild) node.removeChild(node.firstChild)
 let last = null, prevStats = null, mixNow = null;
 
 // ---------- demo controls ----------
+// Buttons appear only with ?controls (the attack console lives at /console)
+const CONTROLS = new URLSearchParams(location.search).has('controls');
 let demoBuilt = false;
 function buildDemo(demo) {
   if (demoBuilt || !demo) return;
   demoBuilt = true;
   $('demo').hidden = false;
+  if (!CONTROLS) {
+    $('demoButtons').hidden = true; $('policyRow').hidden = true;
+    $('demo').querySelector('h2').firstChild.textContent = 'Incoming traffic ';
+    return;
+  }
   const row = $('demoButtons');
   demo.scenarios.forEach(s => {
     const b = el('button', null, s.title); b.dataset.play = s.id; b.title = s.explain; row.appendChild(b);
@@ -307,8 +315,8 @@ function renderDemo(demo) {
     oc.appendChild(document.createTextNode(' (collateral damage)'));
   }
   const np = $('nowPlaying'); clear(np);
-  if (!demo.running) { np.textContent = 'Nothing playing. Choose the guided tour or a single scenario.'; return; }
-  np.appendChild(document.createTextNode('Now playing: '));
+  if (!demo.running) { np.textContent = 'Traffic generator idle.'; return; }
+  np.appendChild(document.createTextNode('Active traffic: '));
   np.appendChild(el('b', null, demo.title));
   np.appendChild(document.createTextNode(' — ' + demo.explain));
   if (demo.seconds_left) np.appendChild(document.createTextNode(` · ${demo.seconds_left} s left`));
@@ -319,7 +327,7 @@ function renderDemo(demo) {
 function renderBanner(s) {
   const b = $('banner'), d = s.last_detection, demo = s.demo;
   const learning = (s.baseline.samples || 0) < 10;
-  let cls = 'idle', icon = '…', state = 'Waiting for traffic', why = 'Start a demo scenario below, or send traffic to the monitored interface.';
+  let cls = 'idle', icon = '…', state = 'Waiting for traffic', why = 'Monitoring the protected interface. No traffic received yet.';
   if (d && d.is_anomaly) {
     cls = 'attack'; icon = '!'; state = 'UNDER ATTACK';
     const kind = d.attack_type && !['UNKNOWN', 'BENIGN'].includes(d.attack_type) ? d.attack_type.replace(/_/g, ' ') : 'DDoS traffic';
@@ -458,7 +466,7 @@ function renderMix(s) {
   const f = $('facts'); clear(f);
   const ml = s.ml_stats || {};
   const facts = [
-    ['Mode', s.simulation_mode ? 'Simulation (no kernel; same detection code)' : `Live XDP on ${s.interface}`],
+    ['Traffic source', s.simulation_mode ? 'Traffic generator (same detection and mitigation code as live XDP)' : `Live XDP on ${s.interface}`],
     ['Normal level learned', s.baseline.samples >= 10 ? `${fmt(s.baseline.mean_pps)} packets/s from ${fmt(s.baseline.samples)} normal seconds` : 'still learning'],
     ['ML model', s.ml_enabled ? `Random Forest, test accuracy ${ml.model_accuracy ? (100 * ml.model_accuracy).toFixed(1) + '%' : '—'}` : 'not loaded'],
     ['ML decision time', ml.avg_inference_ms ? `${ml.avg_inference_ms.toFixed(1)} ms` : '—'],
@@ -547,7 +555,7 @@ async function fetchData() {
     if (!res.ok) throw new Error(res.status);
     const s = await res.json();
     last = s;
-    $('mode').textContent = s.simulation_mode ? 'Simulation mode' : `Live XDP · ${s.interface}`;
+    $('mode').textContent = s.simulation_mode ? 'Online · traffic generator' : `Online · live XDP on ${s.interface}`;
     renderDemo(s.demo); renderBanner(s); renderKpis(s); renderSteps(s); renderEvents(s); renderSources(s); renderMix(s); renderChart(s);
   } catch (e) {
     $('mode').textContent = 'Disconnected';

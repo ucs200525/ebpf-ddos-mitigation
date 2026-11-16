@@ -9,6 +9,7 @@ Serves the single-page dashboard (static/index.html) and the JSON APIs:
 
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
+import threading
 import time
 from pathlib import Path
 
@@ -39,6 +40,12 @@ ddos_system = None
 def index():
     """Dashboard page (static HTML/JS that polls /api/status)"""
     return send_from_directory(STATIC_DIR, 'index.html')
+
+
+@app.route('/console')
+def console():
+    """Attack console: launches traffic profiles from a second device"""
+    return send_from_directory(STATIC_DIR, 'console.html')
 
 
 @app.route('/api/simulate_attack', methods=['POST'])
@@ -131,14 +138,28 @@ def _parse_sample(data: dict):
     return stats, ip_stats
 
 
+_demo_lock = threading.Lock()
+
+
 def _ensure_demo():
-    """Attach the demo engine once the system runs in simulation mode
-    (created lazily: the dashboard starts before the monitor exists)"""
+    with _demo_lock:     # Flask serves requests on several threads: create one runner only
+        _attach_demo()
+
+
+def _attach_demo():
+    """Attach the traffic engine once the monitor exists (created lazily: the dashboard
+    starts before the monitor): scripted samples in simulation mode, real packets in the
+    live XDP traffic lab"""
     system = ddos_system
     monitor = system.traffic_monitor if system else None
     if system and system.demo is None and monitor and monitor.simulation_mode             and system.allow_simulation_api:
         from src.dashboard.demo import DemoRunner
         system.demo = DemoRunner(system)
+    elif system and system.demo is None and monitor and not monitor.simulation_mode \
+            and getattr(monitor, 'loaded', False) and getattr(system, 'lab', False):
+        # Live XDP traffic lab: the profiles are sent as real packets (scripts/lab_server.sh)
+        from src.dashboard.lab import LabRunner
+        system.demo = LabRunner(system)
 
 
 @app.route('/api/demo', methods=['POST'])

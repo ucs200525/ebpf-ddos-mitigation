@@ -10,7 +10,7 @@ re-implemented here only as the SIG baseline.
 | Component | Implemented in | Tested how | Status |
 |---|---|---|---|
 | L3/L4 packet parsing (Ethernet, 802.1Q, IPv4, TCP/UDP ports and flags; no ports in later fragments) | `src/ebpf/xdp_filter.c` (BCC), `xdp_filter_libbpf.c` | Kernel verifier as root (`scripts/check_xdp_compile.py`: OK); 26 kernel checks with known packets (`scripts/check_xdp_flows.py`: all OK); the capture parser used for training matches dpkt on 1.17 M packets | Done, verified in the kernel |
-| Counters: totals, per source (SYN without ACK), per flow (13 counters, LRU 262k), all in IP bytes | XDP maps; `src/core/traffic_monitor.py` (batched lookup-and-delete of the flow map) | `check_xdp_flows.py` (every counter equals what was sent) | Done, verified in the kernel |
+| Counters: totals, per source (SYN without ACK), per flow (14 counters, LRU 262k), all in IP bytes | XDP maps; `src/core/traffic_monitor.py` (batched lookup-and-delete of the flow map) | `check_xdp_flows.py` (every counter equals what was sent) | Done, verified in the kernel |
 | Enforcement: block with expiry, token-bucket rate limit, spoofing guard, SYN guard (per source, per second) -> XDP_DROP / XDP_PASS | XDP program + maps | Unit tests; live runs (drops counted by tcpdump after XDP match XDP's own counters exactly) | Done, verified live |
 | Level 1: attack detection (rules + Random Forest, 16 window features) | `src/core/anomaly_detector.py`, `src/ml/` | Synthetic held-out runs; CIC-DDoS2019 test day (98.7% of attack windows, shipped model); live: attack drop reached 50% within 2 s in every real attack run | Done |
 | Level 2: source scoring (P4) | `src/mitigation/policies.py`, `live.py` | Synthetic seeds, MAWI trace, CIC test day, live XDP | Done |

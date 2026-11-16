@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attack Console</title>
+<style>
+:root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --border: rgba(255, 255, 255, 0.10);
+  --series-in: #3987e5; --series-drop: #d95926;
+  --good: #0ca30c; --warning: #fab219; --critical: #d03b3b;
+  --critical-tint: rgba(208, 59, 59, 0.18); --good-tint: rgba(12, 163, 12, 0.12); --warning-tint: rgba(250, 178, 25, 0.14);
+  --btn: #232322; --btn-hover: #2c2c2a;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11, 11, 11, 0.10); --series-in: #2a78d6; --series-drop: #eb6834;
+    --critical-tint: rgba(208, 59, 59, 0.10); --good-tint: rgba(12, 163, 12, 0.08);
+    --btn: #ffffff; --btn-hover: #f1f0ec;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--page); color: var(--ink); font: 15px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 18px 16px 32px; }
+header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+header h1 { font-size: 22px; font-weight: 650; }
+header .sub { color: var(--ink-2); font-size: 14px; }
+header .right { margin-left: auto; display: flex; gap: 10px; align-items: center; color: var(--ink-2); font-size: 14px; }
+.chip { border: 1px solid var(--border); background: var(--surface); border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+.card h2 { font-size: 15px; font-weight: 650; margin-bottom: 12px; }
+.card h2 small { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; }
+
+#target { display: grid; grid-template-columns: 1.3fr repeat(3, 1fr); gap: 14px; align-items: center; }
+#target .state { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+#target .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--muted); flex: none; }
+#target.attack { background: var(--critical-tint); } #target.attack .dot { background: var(--critical); }
+#target.normal { background: var(--good-tint); } #target.normal .dot { background: var(--good); }
+#target.learning { background: var(--warning-tint); } #target.learning .dot { background: var(--warning); }
+.metric .label { color: var(--ink-2); font-size: 13px; font-weight: 600; }
+.metric .value { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.metric .value small { font-size: 13px; font-weight: 500; color: var(--ink-2); margin-left: 4px; }
+#why { grid-column: 1 / -1; color: var(--ink-2); font-size: 14px; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+button.atk { font: inherit; text-align: left; border: 1px solid var(--border); background: var(--btn); color: var(--ink);
+  border-radius: 10px; padding: 14px 16px; cursor: pointer; min-height: 92px; }
+button.atk:hover { background: var(--btn-hover); }
+button.atk b { display: block; font-size: 16px; margin-bottom: 4px; }
+button.atk span { color: var(--ink-2); font-size: 13px; }
+button.atk.hostile b::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 2px; background: var(--critical); margin-right: 8px; vertical-align: 1px; }
+button.atk.benign b::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 2px; background: var(--good); margin-right: 8px; vertical-align: 1px; }
+button.atk.seq { background: var(--series-in); color: #fff; border-color: transparent; }
+button.atk.seq span { color: rgba(255,255,255,0.85); }
+button.atk.active { outline: 2px solid var(--series-in); outline-offset: 2px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.row button { font: inherit; font-size: 14px; border: 1px solid var(--border); background: var(--btn); color: var(--ink); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+.row button:hover { background: var(--btn-hover); }
+.row button.active { outline: 2px solid var(--series-in); outline-offset: 1px; }
+.row .lbl { color: var(--ink-2); font-size: 14px; }
+#active { color: var(--ink-2); font-size: 14px; min-height: 20px; }
+#active b { color: var(--ink); }
+#outcome { margin-top: 6px; color: var(--ink-2); font-size: 14px; min-height: 20px; }
+#outcome b { color: var(--ink); }
+#spark { height: 90px; margin-top: 10px; }
+#spark svg { width: 100%; height: 100%; display: block; }
+.legend { display: flex; gap: 16px; color: var(--ink-2); font-size: 13px; }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
+footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 6px; }
+@media (max-width: 820px) {
+  #target { grid-template-columns: 1fr 1fr; }
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Attack Console</h1>
+      <div class="sub">Traffic generator aimed at the protected server</div>
+    </div>
+    <div class="right">
+      <span class="chip" id="conn">Connecting...</span>
+      <span id="clock"></span>
+    </div>
+  </header>
+
+  <section class="card" id="target">
+    <div>
+      <div class="label" style="color:var(--ink-2);font-size:13px;font-weight:600">Target status</div>
+      <div class="state"><span class="dot"></span><span id="tState">—</span></div>
+    </div>
+    <div class="metric"><div class="label">Reaching the target</div><div class="value" id="mIn">0<small>pkt/s</small></div></div>
+    <div class="metric"><div class="label">Dropped by XDP</div><div class="value" id="mDrop">0<small>pkt/s</small></div></div>
+    <div class="metric"><div class="label">Our sources blocked</div><div class="value" id="mBlk">0</div></div>
+    <div id="why"></div>
+  </section>
+
+  <section class="card">
+    <h2>Launch traffic <small>each profile runs about 30 s, then normal traffic resumes</small></h2>
+    <div class="grid" id="attacks"></div>
+    <div class="row">
+      <button data-action="stop">■ Stop</button>
+      <button data-action="reset" title="Clears blocks, alerts and counters on the server">↺ Reset server state</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Server mitigation policy</h2>
+    <div class="row" id="policyRow" style="margin-top:0">
+      <button data-policy="p4">P4 source scoring</button>
+      <button data-policy="top5">Top-5 blacklist (baseline)</button>
+      <span class="lbl">Switching clears server state so both can be compared on the same traffic.</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>What the target is receiving</h2>
+    <div id="active"></div>
+    <div id="outcome"></div>
+    <div class="legend" style="margin-top:10px"><span><i style="background:var(--series-in)"></i>Incoming</span><span><i style="background:var(--series-drop)"></i>Dropped</span></div>
+    <div id="spark"><svg id="svg" role="img" aria-label="Incoming and dropped packets per second, last 60 seconds"></svg></div>
+  </section>
+  <footer>Capstone project, VIT-AP University</footer>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n || 0).toLocaleString();
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+const post = body => fetch('/api/demo', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
+  .then(r => r.json()).then(j => { if (j.error) alert(j.error); }).then(refresh);
+
+const HOSTILE = new Set(['udp_flood', 'syn_flood', 'multi_vector']);
+let built = false, last = null;
+
+function build(d) {
+  if (built || !d) return;
+  built = true;
+  const g = $('attacks');
+  const add = (id, title, text, cls) => {
+    const b = el('button', 'atk ' + cls); b.dataset.play = id;
+    b.appendChild(el('b', null, title)); b.appendChild(el('span', null, text)); g.appendChild(b);
+  };
+  add('tour', '▶ Full attack sequence', 'Normal → flash crowd → UDP flood → SYN flood, about 2 min', 'seq');
+  d.scenarios.forEach(s => add(s.id, s.title, s.explain, HOSTILE.has(s.id) ? 'hostile' : 'benign'));
+  g.addEventListener('click', ev => { const b = ev.target.closest('button[data-play]'); if (b) post({action: 'play', scenario: b.dataset.play}); });
+  document.querySelectorAll('button[data-action]').forEach(b => b.addEventListener('click', () => post({action: b.dataset.action})));
+  $('policyRow').addEventListener('click', ev => { const b = ev.target.closest('button[data-policy]'); if (b) post({action: 'policy', policy: b.dataset.policy}); });
+}
+
+function render(s) {
+  const d = s.demo;
+  if (!d) { $('why').textContent = 'The server is attached to a live interface; send real packets to it instead.'; return; }
+  build(d);
+  document.querySelectorAll('button[data-play]').forEach(b =>
+    b.classList.toggle('active', d.tour ? b.dataset.play === 'tour' : b.dataset.play === d.scenario));
+  document.querySelectorAll('#policyRow button').forEach(b => b.classList.toggle('active', b.dataset.policy === d.policy));
+
+  const det = s.last_detection, learning = (s.baseline.samples || 0) < 10;
+  let cls = '', state = 'Idle', why = 'No traffic sent yet.';
+  if (det && det.is_anomaly) { cls = 'attack'; state = 'Attack detected'; why = 'The server has flagged this traffic and is dropping blocked sources in the kernel.'; }
+  else if (s.timeline.length && learning) { cls = 'learning'; state = 'Server learning'; why = `The server is learning normal traffic (${s.baseline.samples}/10 s) before it judges attacks.`; }
+  else if (s.timeline.length) { cls = 'normal'; state = 'Traffic accepted'; why = 'The server treats the current traffic as legitimate.'; }
+  $('target').className = 'card ' + cls; $('tState').textContent = state; $('why').textContent = why;
+  $('mIn').firstChild.textContent = fmt(s.current_pps);
+  $('mDrop').firstChild.textContent = fmt(s.current_drop_pps);
+  $('mBlk').textContent = fmt(d.blocked_bots) + (d.limited_bots ? ` + ${fmt(d.limited_bots)} slowed` : '');
+
+  const a = $('active'); clear(a);
+  if (!d.running) a.textContent = 'Generator idle.';
+  else {
+    a.appendChild(document.createTextNode('Sending: ')); a.appendChild(el('b', null, d.title));
+    a.appendChild(document.createTextNode(' — ' + d.explain));
+    if (d.seconds_left) a.appendChild(document.createTextNode(` · ${d.seconds_left} s left`));
+    if (d.next && d.next.length && d.seconds_left) a.appendChild(document.createTextNode(' · next: ' + d.next[0]));
+  }
+  const o = $('outcome'); clear(o);
+  if (d.attack_drop_pct || d.legit_loss_pct) {
+    o.appendChild(document.createTextNode('Since the last reset: '));
+    o.appendChild(el('b', null, `${d.attack_drop_pct.toFixed(1)}% of attack packets dropped`));
+    o.appendChild(document.createTextNode(' · '));
+    o.appendChild(el('b', null, `${d.legit_loss_pct.toFixed(1)}% of legitimate packets lost`));
+  }
+  spark(s.timeline);
+}
+
+function spark(pts) {
+  const svg = $('svg'), box = $('spark').getBoundingClientRect();
+  const W = Math.max(200, box.width), H = box.height, NS = 'http://www.w3.org/2000/svg';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); clear(svg);
+  if (!pts.length) return;
+  const now = pts[pts.length - 1].t, t0 = now - 60, vis = pts.filter(p => p.t >= t0);
+  const max = Math.max(10, ...vis.map(p => p.pps));
+  const x = t => W * (t - t0) / 60, y = v => H - 2 - (H - 6) * v / max;
+  const path = k => vis.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p[k]).toFixed(1)}`).join('');
+  const mk = (attrs) => { const e = document.createElementNS(NS, 'path'); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); };
+  mk({d: `M0,${y(0)}L${W},${y(0)}`, stroke: css('--grid'), 'stroke-width': 1});
+  mk({d: path('dropped_pps'), fill: 'none', stroke: css('--series-drop'), 'stroke-width': 2});
+  mk({d: path('pps'), fill: 'none', stroke: css('--series-in'), 'stroke-width': 2});
+}
+
+async function refresh() {
+  try {
+    const r = await fetch('/api/status', {cache: 'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    last = await r.json();
+    $('conn').textContent = 'Connected to ' + location.host;
+    render(last);
+  } catch (e) { $('conn').textContent = 'Server unreachable'; }
+}
+setInterval(refresh, 1000);
+setInterval(() => { $('clock').textContent = new Date().toLocaleTimeString([], {hour12: false}); }, 1000);
+window.addEventListener('resize', () => last && spark(last.timeline));
+refresh();
+</script>
+</body>
+</html>

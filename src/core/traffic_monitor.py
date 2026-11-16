@@ -137,6 +137,7 @@ class TrafficMonitor:
         self._sim_guard: Optional[Tuple[float, float]] = None   # (expiry, total pps)
         self.sim_now = 0.0
         self._permanent = set()     # permanent blocks are the only ones saved to disk
+        self.never_block = set()    # addresses the system must never block or slow (gateway, self)
         # Previous cumulative per-IP counters, for per-interval deltas
         self._prev_ip_counters: Dict[str, Tuple[int, int, int, int]] = {}
 
@@ -450,6 +451,10 @@ class TrafficMonitor:
             return False
         ip_address = normalized
 
+        if ip_address in self.never_block:
+            logger.info(f"Not blacklisting protected address {ip_address} (gateway/self)")
+            return False
+
         if ttl_s is None and self.is_blacklisted(ip_address) and ip_address in self._permanent:
             return True
 
@@ -480,6 +485,8 @@ class TrafficMonitor:
     def rate_limit_ip(self, ip_address: str, pps: float, ttl_s: float) -> bool:
         """Limit a source to `pps` packets per second for `ttl_s` seconds (token bucket in XDP)"""
         if not self.loaded or validate_blockable_ip(ip_address) is None:
+            return False
+        if ip_address in self.never_block:
             return False
         pps = max(1, int(round(pps)))
         if self.simulation_mode:
@@ -618,6 +625,20 @@ class TrafficMonitor:
         except Exception as e:
             logger.error(f"Failed to remove {ip_address} from blacklist: {e}")
             return False
+
+    def clear_mitigation(self) -> None:
+        """Live XDP: remove every block, rate limit and the spoofing guard from the kernel maps"""
+        if not self.loaded or self.simulation_mode:
+            return
+        for ip in self.get_blacklist():
+            self.remove_from_blacklist(ip)
+        try:
+            self.bpf.get_table("blacklist_map").clear()
+            self.bpf.get_table("ratelimit_map").clear()
+            guard = self.bpf.get_table("guard_map")
+            guard[guard.Key(0)] = guard.Leaf(*([guard.sLeaf()] * guard.total_cpu))
+        except Exception as e:
+            logger.error(f"Failed to clear mitigation maps: {e}")
 
     def get_blacklist(self) -> List[str]:
         """

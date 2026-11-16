@@ -90,6 +90,20 @@ Examples:
              '(always enabled in simulation mode). Injected samples can blacklist IPs.'
     )
 
+    parser.add_argument(
+        '--protect',
+        default='',
+        help='Comma-separated IPs that must never be blocked or slowed (e.g. the gateway and this '
+             'host). scripts/live_net_server.sh fills this in automatically.'
+    )
+
+    parser.add_argument(
+        '--lab',
+        action='store_true',
+        help='Live XDP traffic lab: the dashboard and /console send real packet profiles into the '
+             'veth pair created by scripts/lab_server.sh (use that script rather than this flag)'
+    )
+
     # Phase 2: ML arguments
     parser.add_argument(
         '--models',
@@ -159,7 +173,9 @@ Examples:
     # Start system
     system = DDoSMitigationSystem(args.interface, args.mode, ml_model_path=ml_model_path,
                                   allow_simulation_api=args.enable_sim_api, policy=args.policy,
-                                  models=args.models, flow_check=args.flow_check)
+                                  models=args.models, flow_check=args.flow_check,
+                                  protected_ips=[p for p in args.protect.split(',') if p.strip()])
+    system.lab = args.lab
 
     # Start dashboard in background thread if enabled
     if args.dashboard:
